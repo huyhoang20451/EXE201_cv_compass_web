@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tạo CV Miễn Phí</title>
+  <style>
+    :root{
+      --bg:#0f172a;          /* slate-900 */
+      --panel:#111827;       /* gray-900 */
+      --muted:#94a3b8;       /* slate-400 */
+      --accent:#22c55e;      /* green-500 */
+      --accent-2:#3b82f6;    /* blue-500 */
+      --card:#0b1220;        /* dark card */
+      --border:#1f2937;      /* gray-800 */
+      --white:#e5e7eb;       /* gray-200 */
+      --chip:#0b3b2a;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--white); background: radial-gradient(1200px 600px at 10% -10%, rgba(34,197,94,.15), transparent), radial-gradient(900px 500px at 110% 10%, rgba(59,130,246,.15), transparent), var(--bg);
+    }
+    .wrapper{max-width:1200px; margin:24px auto; padding:0 16px;}
+    header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px}
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{width:40px;height:40px;border-radius:12px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); display:grid; place-items:center; font-weight:800; color:white}
+    .title{line-height:1}
+    .title h1{font-size:20px; margin:0}
+    .title p{margin:2px 0 0; color:var(--muted); font-size:12px}
+
+    .actions{display:flex; gap:8px; flex-wrap:wrap}
+    .btn{border:1px solid var(--border); background:linear-gradient(180deg, #0f1a2a, #0a0f1c); color:var(--white); padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600}
+    .btn.primary{background:linear-gradient(180deg, #16a34a, #15803d); border-color:#166534}
+    .btn.secondary{background:linear-gradient(180deg, #1e3a8a, #1e40af); border-color:#1e3a8a}
+    .btn.ghost{background:transparent}
+
+    .grid{display:grid; grid-template-columns: 1fr 1fr; gap:16px; align-items:start}
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+
+    /* Left: Form */
+    .panel{background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:16px; padding:16px}
+    .panel h2{font-size:16px; margin:0 0 8px}
+    .field{display:flex; flex-direction:column; margin-bottom:12px}
+    .field label{font-size:12px; color:var(--muted); margin-bottom:6px}
+    .field input,.field textarea, .field select{background:#0a1220; border:1px solid var(--border); color:var(--white); border-radius:10px; padding:10px 12px}
+    .two{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
+    .row{display:flex; gap:8px}
+    .chip{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #14532d; border-radius:999px; background:rgba(34,197,94,.08); margin:4px 6px 0 0; font-size:12px}
+    .chip button{background:transparent; border:0; color:#34d399; cursor:pointer}
+
+    .mini{display:flex; gap:8px; flex-wrap:wrap}
+
+    .list{display:flex; flex-direction:column; gap:8px}
+    .item{border:1px dashed var(--border); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02)}
+    .item .row{align-items:center}
+
+    /* Right: CV Preview */
+    .cv{background:white; color:#111; border-radius:16px; border:1px solid #e5e7eb; padding:28px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .cv-header{display:flex; gap:16px; align-items:center; border-bottom:2px solid #e5e7eb; padding-bottom:16px; margin-bottom:16px}
+    .avatar{width:84px; height:84px; border-radius:999px; background:#e5e7eb; overflow:hidden; flex:0 0 auto}
+    .avatar img{width:100%; height:100%; object-fit:cover}
+    .cv-name{font-size:28px; font-weight:800; margin:0}
+    .cv-role{color:#4b5563; margin-top:2px}
+    .cv-sec{margin-top:18px}
+    .cv-sec h3{margin:0 0 10px; font-size:15px; letter-spacing:.4px; text-transform:uppercase; color:#0f172a}
+    .cv-sec ul{margin:0; padding:0; list-style: none}
+    .cv-sec li{margin-bottom:10px}
+    .cv-muted{color:#6b7280; font-size:13px}
+    .cv-skill{display:inline-block; padding:6px 10px; border-radius:999px; background:#f1f5f9; margin:4px 6px 0 0; font-size:12px}
+
+    /* Print */
+    @media print{
+      body{background:white}
+      header, .panel, .actions{display:none}
+      .grid{grid-template-columns:1fr}
+      .cv{box-shadow:none; border:0; padding:0}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <div class="brand">
+        <div class="logo">CV</div>
+        <div class="title">
+          <h1>Tạo CV Miễn Phí</h1>
+          <p>Điền form bên trái • Xem CV xem trước bên phải • Bấm In / Tải PDF</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="btn-clear">Làm mới</button>
+        <button class="btn secondary" id="btn-save">Lưu bản nháp</button>
+        <button class="btn primary" id="btn-print">In / Tải PDF</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT: FORM -->
+      <section class="panel" id="form">
+        <h2>1) Thông tin cá nhân</h2>
+        <div class="two">
+          <div class="field">
+            <label>Họ và tên</label>
+            <input id="f-name" placeholder="Nguyễn Văn A" />
+          </div>
+          <div class="field">
+            <label>Vị trí mong muốn</label>
+            <input id="f-role" placeholder="Frontend Developer" />
+          </div>
+        </div>
+        <div class="two">
+          <div class="field"><label>Email</label><input id="f-email" placeholder="you@email.com" /></div>
+          <div class="field"><label>Số điện thoại</label><input id="f-phone" placeholder="0123 456 789" /></div>
+        </div>
+        <div class="two">
+          <div class="field"><label>Địa chỉ</label><input id="f-address" placeholder="Hà Nội, Việt Nam" /></div>
+          <div class="field mini">
+            <div class="field" style="flex:1">
+              <label>Ảnh đại diện</label>
+              <input id="f-avatar" type="file" accept="image/*" />
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Tóm tắt bản thân</label>
+          <textarea id="f-summary" rows="3" placeholder="3-4 dòng giới thiệu ngắn gọn về kinh nghiệm, thế mạnh và mục tiêu nghề nghiệp..."></textarea>
+        </div>
+
+        <h2>2) Kỹ năng</h2>
+        <div class="row">
+          <input id="skill-input" placeholder="Thêm kỹ năng và Enter (VD: React)" style="flex:1" />
+          <button class="btn" id="skill-add">Thêm</button>
+        </div>
+        <div id="skill-chips" class="mini" aria-live="polite"></div>
+
+        <h2>3) Kinh nghiệm làm việc</h2>
+        <div id="exp-list" class="list"></div>
+        <button class="btn" id="exp-add">+ Thêm kinh nghiệm</button>
+
+        <h2 style="margin-top:16px">4) Học vấn</h2>
+        <div id="edu-list" class="list"></div>
+        <button class="btn" id="edu-add">+ Thêm học vấn</button>
+
+        <h2 style="margin-top:16px">5) Dự án</h2>
+        <div id="proj-list" class="list"></div>
+        <button class="btn" id="proj-add">+ Thêm dự án</button>
+      </section>
+
+      <!-- RIGHT: CV PREVIEW -->
+      <section class="cv" id="cv">
+        <div class="cv-header">
+          <div class="avatar" id="cv-avatar"></div>
+          <div>
+            <h2 class="cv-name" id="cv-name">Họ và Tên</h2>
+            <div class="cv-role" id="cv-role">Vị trí mong muốn</div>
+            <div class="cv-muted" id="cv-contact">email@domain • 0123 456 789 • Hà Nội</div>
+          </div>
+        </div>
+
+        <div class="cv-sec">
+          <h3>Tóm tắt</h3>
+          <div id="cv-summary" class="cv-muted">Viết ngắn gọn 3-4 dòng mô tả năng lực nổi bật, kinh nghiệm chính và mục tiêu nghề nghiệp của bạn.</div>
+        </div>
+
+        <div class="cv-sec">
+          <h3>Kỹ năng</h3>
+          <div id="cv-skills"></div>
+        </div>
+
+        <div class="cv-sec">
+          <h3>Kinh nghiệm</h3>
+          <ul id="cv-exp"></ul>
+        </div>
+
+        <div class="cv-sec">
+          <h3>Học vấn</h3>
+          <ul id="cv-edu"></ul>
+        </div>
+
+        <div class="cv-sec">
+          <h3>Dự án</h3>
+          <ul id="cv-proj"></ul>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // --- State ---
+    const state = {
+      name:"", role:"", email:"", phone:"", address:"", summary:"",
+      skills:[],
+      exp:[],  // {company, role, start, end, desc}
+      edu:[],  // {school, degree, start, end, desc}
+      proj:[], // {name, link, desc, tech}
+      avatar:null
+    };
+
+    // --- Helpers ---
+    const el = id => document.getElementById(id);
+    const saveDraft = () => localStorage.setItem('cv_draft', JSON.stringify(state));
+    const loadDraft = () => { const s = localStorage.getItem('cv_draft'); if(s){ Object.assign(state, JSON.parse(s)); renderAll(); fillFormFromState(); }}
+    const clearDraft = () => { localStorage.removeItem('cv_draft'); location.reload(); }
+
+    // --- Bind inputs ---
+    const bindText = (inputId, key, onChange) => {
+      const input = el(inputId);
+      const handler = () => { state[key] = input.value; onChange && onChange(); renderHeader(); saveDraft(); }
+      input.addEventListener('input', handler);
+      return handler;
+    }
+
+    function fillFormFromState(){
+      el('f-name').value = state.name || '';
+      el('f-role').value = state.role || '';
+      el('f-email').value = state.email || '';
+      el('f-phone').value = state.phone || '';
+      el('f-address').value = state.address || '';
+      el('f-summary').value = state.summary || '';
+      // skills chips
+      renderSkills();
+      // lists
+      renderSections();
+      renderAll();
+    }
+
+    // Header render
+    function renderHeader(){
+      el('cv-name').textContent = state.name || 'Họ và Tên';
+      el('cv-role').textContent = state.role || 'Vị trí mong muốn';
+      el('cv-contact').textContent = [state.email, state.phone, state.address].filter(Boolean).join(' • ') || 'email@domain • 0123 456 789 • Hà Nội';
+      el('cv-summary').textContent = state.summary || 'Viết ngắn gọn 3-4 dòng mô tả năng lực nổi bật, kinh nghiệm chính và mục tiêu nghề nghiệp của bạn.';
+    }
+
+    // Skills
+    function renderSkills(){
+      const wrap = el('skill-chips');
+      wrap.innerHTML = '';
+      state.skills.forEach((sk, idx)=>{
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerHTML = `${sk} <button title="Xoá" aria-label="Xoá" data-i="${idx}">×</button>`;
+        chip.querySelector('button').onclick = ()=>{ state.skills.splice(idx,1); renderSkills(); renderAll(); saveDraft(); };
+        wrap.appendChild(chip);
+      });
+      // CV side
+      const cv = el('cv-skills');
+      cv.innerHTML = state.skills.map(s=>`<span class="cv-skill">${s}</span>`).join('');
+    }
+
+    el('skill-add').addEventListener('click', () => {
+      const inp = el('skill-input');
+      const v = (inp.value||'').trim();
+      if(v){ state.skills.push(v); inp.value=''; renderSkills(); renderAll(); saveDraft(); }
+    });
+    el('skill-input').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); el('skill-add').click(); }});
+
+    // Dynamic Sections (exp, edu, proj)
+    function addItem(type){
+      const defaults = {
+        exp:{company:'Công ty', role:'Chức danh', start:'2023-01', end:'2024-01', desc:'Mô tả ngắn 2-3 gạch đầu dòng'},
+        edu:{school:'Trường/ĐH', degree:'Bằng cấp/Chuyên ngành', start:'2019-09', end:'2023-06', desc:'Thành tích/ Môn học chính'},
+        proj:{name:'Tên dự án', link:'', desc:'Mục tiêu, vai trò, kết quả', tech:'React, Node.js'}
+      };
+      state[type].push({...defaults[type]}); renderSections(); renderAll(); saveDraft();
+    }
+
+    function renderSections(){
+      renderList('exp', 'exp-list', ['company','role','start','end','desc']);
+      renderList('edu', 'edu-list', ['school','degree','start','end','desc']);
+      renderList('proj', 'proj-list', ['name','link','desc','tech']);
+    }
+
+    function renderList(type, mountId, fields){
+      const mount = el(mountId); mount.innerHTML='';
+      state[type].forEach((it, idx)=>{
+        const box = document.createElement('div'); box.className='item';
+        const inner = [];
+        fields.forEach(f=>{
+          inner.push(`<div class="field"><label>${labelOf(type,f)}</label><input data-type="${type}" data-idx="${idx}" data-key="${f}" value="${escapeHtml(it[f]||'')}"></div>`);
+        });
+        box.innerHTML = `<div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px">
+            <strong>${titleOf(type)} ${idx+1}</strong>
+            <button class="btn" data-remove="${type}:${idx}" style="padding:6px 10px">Xoá</button>
+          </div>${inner.join('')}`;
+        mount.appendChild(box);
+      });
+      mount.querySelectorAll('input').forEach(inp=>{
+        inp.addEventListener('input', e=>{
+          const t = e.target; const type=t.dataset.type; const i=+t.dataset.idx; const key=t.dataset.key; state[type][i][key]=t.value; renderAll(); saveDraft();
+        })
+      });
+      mount.querySelectorAll('button[data-remove]').forEach(btn=>{
+        btn.onclick = ()=>{ const [type, i] = btn.dataset.remove.split(':'); state[type].splice(+i,1); renderSections(); renderAll(); saveDraft(); }
+      })
+    }
+
+    function labelOf(type, key){
+      const map = {
+        exp:{company:'Công ty', role:'Chức danh', start:'Bắt đầu (YYYY-MM)', end:'Kết thúc (YYYY-MM)', desc:'Mô tả'},
+        edu:{school:'Trường', degree:'Bằng/Ngành', start:'Bắt đầu (YYYY-MM)', end:'Kết thúc (YYYY-MM)', desc:'Mô tả'},
+        proj:{name:'Tên dự án', link:'Liên kết (tuỳ chọn)', desc:'Mô tả', tech:'Công nghệ'}
+      }; return map[type][key]||key;
+    }
+
+    function titleOf(type){ return {exp:'Kinh nghiệm', edu:'Học vấn', proj:'Dự án'}[type]; }
+
+    function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
+
+    function renderAll(){
+      // Summary already via renderHeader
+      // Experience
+      el('cv-exp').innerHTML = state.exp.map(e=>`<li>
+        <strong>${escapeHtml(e.role)}</strong> — ${escapeHtml(e.company)}
+        <div class="cv-muted">${escapeHtml(e.start)} – ${escapeHtml(e.end)}</div>
+        <div>${escapeHtml(e.desc)}</div>
+      </li>`).join('');
+      // Education
+      el('cv-edu').innerHTML = state.edu.map(e=>`<li>
+        <strong>${escapeHtml(e.degree)}</strong> — ${escapeHtml(e.school)}
+        <div class="cv-muted">${escapeHtml(e.start)} – ${escapeHtml(e.end)}</div>
+        <div>${escapeHtml(e.desc)}</div>
+      </li>`).join('');
+      // Projects
+      el('cv-proj').innerHTML = state.proj.map(p=>`<li>
+        <strong>${escapeHtml(p.name)}</strong> ${p.link?`— <a href="${escapeHtml(p.link)}" target="_blank">Liên kết</a>`:''}
+        <div>${escapeHtml(p.desc)}</div>
+        <div class="cv-muted">${escapeHtml(p.tech)}</div>
+      </li>`).join('');
+    }
+
+    // Avatar upload
+    el('f-avatar').addEventListener('change', (e)=>{
+      const file = e.target.files[0]; if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{ state.avatar = reader.result; const v = el('cv-avatar'); v.innerHTML=`<img src="${state.avatar}" alt="avatar"/>`; saveDraft(); };
+      reader.readAsDataURL(file);
+    });
+
+    // Bind basic fields
+    bindText('f-name','name');
+    bindText('f-role','role');
+    bindText('f-email','email');
+    bindText('f-phone','phone');
+    bindText('f-address','address');
+    bindText('f-summary','summary', ()=>{ el('cv-summary').textContent = state.summary; });
+
+    // Buttons
+    el('btn-print').onclick = ()=> window.print();
+    el('btn-save').onclick = ()=> { saveDraft(); alert('Đã lưu bản nháp trên trình duyệt (LocalStorage).'); };
+    el('btn-clear').onclick = ()=> { if(confirm('Xoá toàn bộ dữ liệu đã nhập?')) clearDraft(); };
+
+    // Add row buttons
+    el('exp-add').onclick = ()=> addItem('exp');
+    el('edu-add').onclick = ()=> addItem('edu');
+    el('proj-add').onclick = ()=> addItem('proj');
+
+    // Init
+    renderHeader();
+    renderSkills();
+    renderSections();
+    loadDraft();
+  </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+    "Hoang123": {
+        "username": "Hoang123",
+        "password": "$2b$12$b5dVo0QN4GuXviaQxn6piepNBMfFMhUOzHWecr1dOVtKm6mb/j..G",
+        "role": "user",
+        "coin": 5
+    },
+    "phong01": {
+        "username": "phong01",
+        "password": "$2b$12$ChYhaGwS0KDiUurXFcKFyOlv5LqqWU.y74iXY1knI/GrkJ.KSgVgm",
+        "role": "user",
+        "coin": 10
+    },
+    "cocacola_company": {
+        "username": "cocacola_company",
+        "password": "$2b$12$6TSyNWKCFCXeHaTcd5YpL.bZ0DeCtZFr/l8R848sIfxBakFSybt8.",
+        "role": "business",
+        "company": "Coca Cola Company"
+    },
+    "huyhoang01": {
+        "username": "huyhoang01",
+        "password": "$2b$12$Z1SPVolcG0ZpcQbHqjfDLOXcwVuE/kp1id4r1dojijJ9csLkzEjki",
+        "role": "user",
+        "coin": 5
+    },
+    "deercoffee": {
+        "username": "deercoffee",
+        "password": "$2b$12$lPMUPbXufQsuh.D/tARf3O5IdAB1ZJNINMuJ0P5qIi9mEsH5mkeie",
+        "role": "business",
+        "coin": 10,
+        "company": "Deer Coffee"
+    }
+}

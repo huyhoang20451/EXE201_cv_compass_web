@@ -1,0 +1,300 @@
+import json
+import os
+from fastapi import FastAPI, HTTPException, Form, Request, requests
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from passlib.context import CryptContext
+from pydantic import BaseModel
+from typing import List
+# File is not defined
+
+
+app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Đường dẫn folder templates
+templates = Jinja2Templates(directory="templates")
+
+# File JSON lưu user
+USER_FILE = "database/users.json"
+JD_FILE = "database/job-description.json"
+
+# Load the model
+class job_description(BaseModel):
+    id: int
+    company_logo: str
+    job_title: str
+    company_name: str
+    salary: str
+    location: str
+    details: dict
+
+# Hàm load các jd vào trang Cơ hội tuyển dụng
+def load_jd() -> List[job_description]:
+    with open(JD_FILE, "r", encoding="utf-8") as f:
+        return [job_description(**item) for item in json.load(f)]
+
+    
+
+# Băm mật khẩu
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# ==== Hàm tiện ích ====
+def load_users():
+    if not os.path.exists(USER_FILE):
+        return {}
+    with open(USER_FILE, "r", encoding="utf-8") as f:
+        try:
+            return json.load(f)
+        except json.JSONDecodeError:
+            return {}
+
+def save_users(users):
+    with open(USER_FILE, "w", encoding="utf-8") as f:
+        json.dump(users, f, ensure_ascii=False, indent=4)
+
+# ==== ROUTES ====
+
+#---------------------------------
+
+# Route đăng ký: nhận dữ liệu từ form
+@app.post("/signup")
+def signup(username: str = Form(...), password: str = Form(...), role: str = Form("user"), company: str = Form(None)):
+    users = load_users()
+    if username in users:
+        raise HTTPException(status_code=400, detail="Tên người dùng đã tồn tại")
+
+    hashed_pw = pwd_context.hash(password)
+    user_data = {"username": username, "password": hashed_pw, "role": role, "coin": 10}
+    if role == "business" and company:
+        user_data["company"] = company
+    users[username] = user_data
+    save_users(users)
+
+    return {"message": "Đăng ký thành công!"}
+
+# Đăng nhập
+@app.post("/login", response_class=HTMLResponse)
+def login(username: str = Form(...), password: str = Form(...)):
+    users = load_users()
+    user = users.get(username)
+
+    if not user or not pwd_context.verify(password, user["password"]):
+        raise HTTPException(status_code=400, detail="Sai tên đăng nhập hoặc mật khẩu")
+
+    user_role = user.get("role", "business")
+    company = user.get("company", "")
+
+    # Trả về trang HTML chào mừng
+    if user_role == "business":
+        return RedirectResponse(url=f"/business-dashboard?username={username}&role={user_role}&company={company}", status_code=303)
+    else:
+        return RedirectResponse(url=f"/home-logged-in?username={username}&role={user_role}", status_code=303)
+#---------------------------------
+
+# Trang đăng ký
+@app.get("/signup", response_class=HTMLResponse)
+def signup_form(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+# Xử lý đăng ký
+@app.post("/signup")
+def signup(username: str = Form(...), password: str = Form(...), role: str = Form("user"), company: str = Form(None)):
+    users = load_users()
+    if username in users:
+        raise HTTPException(status_code=400, detail="Tên người dùng đã tồn tại")
+
+    hashed_pw = pwd_context.hash(password)
+    user_data = {"username": username, "password": hashed_pw, "role": role}
+    if role == "business" and company:
+        user_data["company"] = company
+    users[username] = user_data
+    save_users(users)
+
+    return {"message": "Đăng ký thành công!"}
+
+# Trang đăng nhập
+@app.get("/login", response_class=HTMLResponse)
+def login_form(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+# Xử lý đăng nhập
+@app.post("/login", response_class=HTMLResponse)
+def login(request: Request, username: str = Form(...), password: str = Form(...)):
+    users = load_users()
+    user = users.get(username)
+
+    if not user or not pwd_context.verify(password, user["password"]):
+        raise HTTPException(status_code=400, detail="Sai tên đăng nhập hoặc mật khẩu")
+
+    # Lấy quyền người dùng
+    user_role = user.get("role", "business")
+    company = user.get("company", "")
+
+    # Chuyển hướng kèm role (nếu cần dùng ở template, có thể truyền qua session hoặc query)
+    if user_role == "business":
+        return RedirectResponse(url=f"/business-dashboard?username={username}&role={user_role}&company={company}", status_code=303)
+    else:
+        return RedirectResponse(url=f"/home-logged-in?username={username}&role={user_role}", status_code=303)
+
+#-------------------------chuyen trang khi da dang nhap---------------------------------------------
+# Trang home (sau khi login)
+@app.get("/home-logged-in", response_class=HTMLResponse)
+def home_logged_in(request: Request, username: str):
+    job_descriptions = load_jd()
+    templates = Jinja2Templates(directory="templates")
+    return templates.TemplateResponse("home_logged_in.html", {"request": request, "job_descriptions": job_descriptions, "username": username})
+
+@app.get("/", response_class=HTMLResponse)
+def root(request: Request):
+    # Load job descriptions
+    job_descriptions = load_jd()
+    templates = Jinja2Templates(directory="templates")
+    return templates.TemplateResponse("home.html", {"request": request, "job_descriptions": job_descriptions})
+
+@app.get("/aboutus-logged-in", response_class=HTMLResponse)
+def about_us(request: Request, username: str):
+    return templates.TemplateResponse("aboutus-logged-in.html", {"request": request, "username": username})
+
+@app.get("/pricing-user-loggedin", response_class=HTMLResponse)
+def pricing(request: Request, username: str):
+    return templates.TemplateResponse("pricing-user-loggedin.html", {"request": request, "username": username})
+
+@app.get("/ocr-scan-logged-in", response_class=HTMLResponse)
+def ocr_scan(request: Request, username: str):
+    return templates.TemplateResponse("ocr-scan.html", {"request": request, "username": username})
+
+@app.get('/top10-best-jd', response_class=HTMLResponse)
+def top10_best_jd(request: Request, username: str):
+    job_description = load_jd()
+    users = load_users()
+    user = users.get(username)
+    coin = user.get("coin", 0) if user else 0
+    if not job_description:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return templates.TemplateResponse("top10-best-jd.html", {"request": request, "username": username, "coin": coin, "job_description": job_description})
+
+@app.get('/top10-best-jd-detail', response_class=HTMLResponse)
+def top10_best_jd_detail(request: Request, username: str):
+    job_description = load_jd()
+    users = load_users()
+    user = users.get(username)
+    coin = user.get("coin", 0) if user else 0
+    if not job_description:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return templates.TemplateResponse("top10-best-jd-detail.html", {"request": request, "username": username, "coin": coin, "job_description": job_description})
+
+#-----------------------------------------------------------------------------------------
+#---------------------------- chuyen trang chua dang nhap---------------------------------------------
+@app.get("/aboutus", response_class=HTMLResponse)
+def about_us(request: Request):
+    return templates.TemplateResponse("about-us.html", {"request": request})
+
+@app.get("/home", response_class=HTMLResponse)
+def home(request: Request):
+    job_descriptions = load_jd()
+    templates = Jinja2Templates(directory="templates")
+    return templates.TemplateResponse("home.html", {"request": request, "job_descriptions": job_descriptions})
+
+@app.get("/pricing", response_class=HTMLResponse)
+def pricing(request: Request):
+    return templates.TemplateResponse("pricing.html", {"request": request})
+
+# Viết trang khi click vào 1 job cần quan tâm, chuyển sang trang chi tiết
+@app.get("/job-detail/{job_id}", response_class=HTMLResponse)
+def job_detail(request: Request, username: str, job_id: int):
+    job_descriptions = load_jd()
+    job = next((item for item in job_descriptions if item.id == job_id), None)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return templates.TemplateResponse("job-detail.html", {"request": request, "job": job, "username": username})
+
+@app.get("/business-home", response_class=HTMLResponse)
+def business_home(request: Request):
+    return templates.TemplateResponse("home-business.html", {"request": request})
+
+@app.get("/business-dashboard", response_class=HTMLResponse)
+def business_dashboard(request: Request, username: str = None, company: str = None):
+    # Nếu company chưa truyền qua query, lấy từ users.json
+    if not company and username:
+        users = load_users()
+        user = users.get(username)
+        company = user.get("company", "") if user else ""
+    return templates.TemplateResponse("business_dashboard.html", {"request": request, "username": username, "company": company})
+
+@app.get("/pricing-business-logged-in", response_class=HTMLResponse)
+def pricing_business_logged_in(request: Request, username: str, company: str):
+    return templates.TemplateResponse("pricing_business_logged_in.html", {"request": request, "username": username, "company": company})
+
+@app.get("/top10-best-jd-unblur", response_class=HTMLResponse)
+def top10_best_jd_unblur(request: Request, username: str):
+    job_descriptions = load_jd()[:10]  # Lấy đúng 10 JD
+    return templates.TemplateResponse("top10-best-jd-unblur.html", {"request": request, "job_descriptions": job_descriptions, "username": username})
+
+@app.get("/api/deduct-coin")
+def deduct_coin(username: str, amount: int):
+    users = load_users()
+    user = users.get(username)
+    if not user:
+        return JSONResponse(content={"success": False, "msg": "Không tìm thấy người dùng."})
+    coin = user.get("coin", 0)
+    if coin < amount:
+        return JSONResponse(content={"success": False, "msg": "Bạn không đủ coin."})
+    user["coin"] = coin - amount
+    save_users(users)
+    return JSONResponse(content={"success": True, "coin": user["coin"]})
+
+@app.get("/api/get-coin")
+def get_coin(username: str):
+    users = load_users()
+    user = users.get(username)
+    if not user:
+        return {"success": False, "msg": "Không tìm thấy người dùng.", "coin": 0}
+    coin = user.get("coin", 0)
+    return {"success": True, "coin": coin}
+
+# When click on the job on top-10-best-jd-unblur, go to detail page with unblurred content
+@app.get("/top10-best-jd-detail-unblur/job_id={job_id}", response_class=HTMLResponse)
+def top10_best_jd_detail_unblur(request: Request, username: str, job_id: int):
+    job_descriptions = load_jd()
+    job = next((item for item in job_descriptions if item.id == job_id), None)
+    users = load_users()
+    user = users.get(username)
+    coin = user.get("coin", 0) if user else 0
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return templates.TemplateResponse("top10-best-jd-detail-unblur.html", {"request": request, "job": job, "job_descriptions": job_descriptions, "username": username, "coin": coin})
+
+@app.get("/create-free-cv", response_class=HTMLResponse)
+def create_free_cv(request: Request):
+    return templates.TemplateResponse("create-free-cv.html", {"request": request})
+
+@app.get("/job-storage", response_class=HTMLResponse)
+def job_storage(request: Request, company: str):
+    job_descriptions = load_jd()
+    return templates.TemplateResponse("job-storage.html", {"request": request, "company": company})
+
+@app.post("/submit-job", response_class=HTMLResponse)
+def submit_job(request: Request, company_logo: str = Form(...), job_title: str = Form(...), company_name: str = Form(...), salary: str = Form(...), location: str = Form(...), details: str = Form(...)):
+    job_descriptions = load_jd()
+    new_id = max((job.id for job in job_descriptions), default=0) + 1
+    try:
+        details_dict = json.loads(details)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Details must be a valid JSON string.")
+    new_job = job_description(
+        id=new_id,
+        company_logo=company_logo,
+        job_title=job_title,
+        company_name=company_name,
+        salary=salary,
+        location=location,
+        details=details_dict
+    )
+    job_descriptions.append(new_job)
+    with open(JD_FILE, "w", encoding="utf-8") as f:
+        json.dump([job.dict() for job in job_descriptions], f, ensure_ascii=False, indent=4)
+    return RedirectResponse(url="/business-dashboard", status_code=303)
+
+

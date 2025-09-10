@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="stylesheet" href="/static/css/job_detail.css">
+    <title>{{ job.job_title }} - {{ job.company_name }}</title>
+</head>
+<body style="background-color: #F6FCFF">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="/static/images/Screenshot 2025-08-25 150046.png" alt="Logo CV Compass">
+        </div>
+        <div class="header-menu">
+            <ul>
+                <li><a href="/home-logged-in?username={{username}}">Trang chủ</a></li>
+                <li><a href="/aboutus-logged-in?username={{username}}">Về chúng tôi</a></li>
+                <li><a href="/home-logged-in?username={{username}}">Tìm việc làm</a></li>
+                <li><a href="/ocr-scan-logged-in?username={{username}}">Quét CV bằng OCR</a></li>
+                <li><a href="/pricing-user-loggedin?username={{username}}">Gói dịch vụ</a></li>
+            </ul>
+        </div>
+        <div class="header-actions">
+            <p id="welcome-user">Chào mừng, {{username}}!</p>
+            <p style="display: flex; align-items: center; background-color: #D1E9F6; padding: 5px 10px; border-radius: 5px;"><img style="width: 20px; height: 20px;" src="/static/images/coin.png" alt="Coin"><strong></strong></p>
+            <script>
+                async function fetchCoin() {
+                    try {
+                    const response = await fetch(`/api/get-coin?username={{username}}`);
+                    const data = await response.json();
+                    if (data.success) {
+                        document.querySelector('.header-actions strong').textContent = data.coin;
+                    } else {
+                        console.error('Lỗi khi lấy số coin:', data.msg);
+                    }
+                } catch (error) {
+                    console.error('Lỗi mạng khi lấy số coin:', error);
+                }
+            }
+            // Gọi hàm khi trang được tải
+            window.onload = fetchCoin;
+            </script>
+        </div>
+        <div class="user-avatar">
+            <img onclick="boxAppear()" style="width: 40px; height: 40px; border-radius: 50%;" src="/static/images/user_avatar.png" alt="User Avatar">
+        </div>
+        <script>
+            function boxAppear() {
+                const box = document.createElement('div');
+                box.style.position = 'absolute';
+                box.style.top = '60px';
+                box.style.right = '20px';
+                box.style.backgroundColor = '#fff';
+                box.style.border = '1px solid #ccc';
+                box.style.borderRadius = '5px';
+                box.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                box.style.padding = '10px';
+                box.innerHTML = `
+                    <p><a href="#" style="text-decoration:none;color:#222;">Hồ sơ của tôi</a></p>
+                    <p><a href="#" style="text-decoration:none;color:#222;">CV của tôi</a></p>
+                    <p><a href="#" style="text-decoration:none;color:#222;">Cài đặt tài khoản</a></p>
+                    <p><a href="/home" style="text-decoration:none;color:#222;">Đăng xuất</a></p>
+                `;
+                document.body.appendChild(box);
+                document.addEventListener('click', function handleClickOutside(event) {
+                    if (!box.contains(event.target) && event.target !== document.querySelector('.user-avatar img')) {
+                        box.remove();
+                        document.removeEventListener('click', handleClickOutside);
+                    }
+                });
+            }
+        </script>
+
+        <div class="header-nhatuyendung">
+           <p class="cau_hoi">Bạn là nhà tuyển dụng?</p>
+           <p><a href="/business-home" target='_blank'>Đăng tin ngay</a></p>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Job Info -->
+    <div class="job-detail-container">
+        <div class="job-header">
+            <div class="job-main">
+                <h1>{{ job.job_title }}</h1>
+                <p><b>Lương:</b> {{ job.salary }}</p>
+                <p><b>Địa điểm:</b> {{ job.location }}</p>
+                <p><b>Hạn nộp hồ sơ:</b> {{ job.details.deadline }}</p>
+                <button class="btn-apply">Gửi CV</button>
+            </div>
+            <div class="job-company">
+                <img src="{{ job.company_logo }}" alt="{{ job.company_name }} Logo">
+                <h2>{{ job.company_name }}</h2>
+                <p><b>Ngành:</b> {{ job.details.industry }}</p>
+                <p><b>Quy mô:</b> {{ job.details.scale if job.details.scale else "Đang cập nhật" }}</p>
+                <p><b>Địa chỉ:</b> {{ job.details.workplace }}</p>
+            </div>
+        </div>
+
+        <!-- Job Detail Content -->
+        <div class="job-content">
+            <h3>Mô tả công việc</h3>
+            <p>{{ job.details.job_description }}</p>
+
+            <h3>Yêu cầu</h3>
+            <ul>
+                {% for req in job.details.requirements %}
+                <li>{{ req }}</li>
+                {% endfor %}
+            </ul>
+
+            <h3>Quyền lợi</h3>
+            <ul>
+                {% for benefit in job.details.benefits %}
+                <li>{{ benefit }}</li>
+                {% endfor %}
+            </ul>
+
+            <p><b>Thời gian làm việc:</b> {{ job.details.working_time }}</p>
+            <p><b>Cách ứng tuyển:</b> {{ job.details.application_method }}</p>
+        </div>
+    </div>
+
+    <div class="back-link">
+        <a href="/home-logged-in?username={{username}}">← Quay lại danh sách</a>
+    </div>
+
+</body>
+</html>

@@ -71,8 +71,15 @@
           <button method='post' type="submit" class="btn-login">Đăng nhập</button>
         </div>
       </form>
+      
     </div>
   </div>
+
+  {% if success %}
+<div style="position: fixed; top: 32px; right: 32px; background: #4caf50; color: #fff; padding: 16px 32px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); z-index: 999; font-size: 1.1rem;">
+    Đăng ký thành công! Vui lòng đăng nhập.
+</div>
+{% endif %}
 
   <script>
     function signin_success(event) {

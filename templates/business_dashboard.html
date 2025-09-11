@@ -178,9 +178,9 @@
         </div>
         <div class="header-menu"> <!-- Menu lựa chọn -->
             <ul>
-                <li><a method='get' href="#">Trang chủ</a></li>
-                <li><a method="get" href="/job-storage?company={{company}}">Quản lý JD</a></li>
-                <li><a method="get" href="#">Danh sách CV</a></li>
+                <li><a method='get' href="/business-dashboard?username={{username}}&role={{role}}&company={{company}}">Trang chủ</a></li>
+                <li><a method="get" href="/job-storage?username={{username}}&company={{company}}">Quản lý JD</a></li>
+                <li><a method="get" href="/cv-detail-business?username={{username}}&company={{company}}">Danh sách CV</a></li>
                 <li><a method="get" href="#">Quét CV tự động</a></li>
                 <li><a method="get" href="/pricing-business-logged-in?username={{username}}&role={{role}}&company={{company}}">Nâng cấp Premium</a></li>
             </ul>
@@ -228,7 +228,7 @@
                 <h1>Chào mừng {{company}}, hãy cùng tuyển dụng hiệu quả với AI!</h1>
             </div>
             <div class="button_content">
-                <button onclick="location.href='/login'" class="btn btn-upload-cv">Đăng tuyển ngay<span class="material-symbols-outlined">upload</span></button>
+                <button onclick="location.href='/dang-tuyen-ngay?username={{username}}&company={{company}}'" class="btn btn-upload-cv">Đăng tuyển ngay<span class="material-symbols-outlined">upload</span></button>
             </div>  
         </div>
     </div> <!-- kết thúc phần introduction -->

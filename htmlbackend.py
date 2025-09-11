@@ -59,11 +59,12 @@ def save_users(users):
 #---------------------------------
 
 # Route đăng ký: nhận dữ liệu từ form
-@app.post("/signup")
-def signup(username: str = Form(...), password: str = Form(...), role: str = Form("user"), company: str = Form(None)):
+
+@app.post("/signup", response_class=HTMLResponse)
+def signup(request: Request, username: str = Form(...), password: str = Form(...), role: str = Form("user"), company: str = Form(None)):
     users = load_users()
     if username in users:
-        raise HTTPException(status_code=400, detail="Tên người dùng đã tồn tại")
+        return templates.TemplateResponse("register.html", {"request": request, "error": "Tên người dùng đã tồn tại"})
 
     hashed_pw = pwd_context.hash(password)
     user_data = {"username": username, "password": hashed_pw, "role": role, "coin": 10}
@@ -72,8 +73,9 @@ def signup(username: str = Form(...), password: str = Form(...), role: str = For
     users[username] = user_data
     save_users(users)
 
-    return {"message": "Đăng ký thành công!"}
-
+    # Chuyển về trang login và truyền thông báo thành công
+    return templates.TemplateResponse("login.html", {"request": request, "success": "Đăng ký thành công"})
+    
 # Đăng nhập
 @app.post("/login", response_class=HTMLResponse)
 def login(username: str = Form(...), password: str = Form(...)):
@@ -112,7 +114,7 @@ def signup(username: str = Form(...), password: str = Form(...), role: str = For
     users[username] = user_data
     save_users(users)
 
-    return {"message": "Đăng ký thành công!"}
+    return RedirectResponse(url="/login", status_code=303)
 
 # Trang đăng nhập
 @app.get("/login", response_class=HTMLResponse)
@@ -271,9 +273,12 @@ def create_free_cv(request: Request):
     return templates.TemplateResponse("create-free-cv.html", {"request": request})
 
 @app.get("/job-storage", response_class=HTMLResponse)
-def job_storage(request: Request, company: str):
+def job_storage(request: Request, company: str, username: str):
     job_descriptions = load_jd()
-    return templates.TemplateResponse("job-storage.html", {"request": request, "company": company})
+    users = load_users()
+    user = users.get(username)
+    company = user.get("company", "") if user else ""
+    return templates.TemplateResponse("job-storage.html", {"request": request, "company": company, "username": username, "job_descriptions": job_descriptions})
 
 @app.post("/submit-job", response_class=HTMLResponse)
 def submit_job(request: Request, company_logo: str = Form(...), job_title: str = Form(...), company_name: str = Form(...), salary: str = Form(...), location: str = Form(...), details: str = Form(...)):
@@ -297,4 +302,16 @@ def submit_job(request: Request, company_logo: str = Form(...), job_title: str =
         json.dump([job.dict() for job in job_descriptions], f, ensure_ascii=False, indent=4)
     return RedirectResponse(url="/business-dashboard", status_code=303)
 
+@app.get("/dang-tuyen-ngay", response_class=HTMLResponse)
+def dang_tuyen_ngay(request: Request, username: str):
+    users = load_users()
+    user = users.get(username)
+    company = user.get("company", "") if user else ""
+    return templates.TemplateResponse("form-dang-tuyen-ngay.html", {"request": request, "username": username, "company": company})
 
+@app.get("/cv-detail-business", response_class=HTMLResponse)
+def cv_detail_business(request: Request, username: str):
+    users = load_users()
+    user = users.get(username)
+    company = user.get("company", "") if user else ""
+    return templates.TemplateResponse("cv-detail-business.html", {"request": request, "username": username, "company": company})

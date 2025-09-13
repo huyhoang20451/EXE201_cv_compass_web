@@ -28,14 +28,32 @@ class job_description(BaseModel):
     company_name: str
     salary: str
     location: str
-    details: dict
+    industry: str
+    position: str
+    company: str
+    workplace: str
+    job_description: List[str]
+    requirements: List[str]
+    benefits: List[str]
+    working_time: str
+    application_method: str
+    deadline: str
 
 # Hàm load các jd vào trang Cơ hội tuyển dụng
 def load_jd() -> List[job_description]:
     with open(JD_FILE, "r", encoding="utf-8") as f:
-        return [job_description(**item) for item in json.load(f)]
+        return json.load(f)
 
-    
+def get_job_detail_by_id(job_id: int) -> job_description | None:
+    all_jobs = load_jd()
+    job = next((item for item in all_jobs if item["id"] == job_id), None)
+    return job
+
+# Viết hàm load ra các vị trí có id = với tên đang đăng nhập
+def load_jd_by_company(company: str) -> List[job_description]:
+    all_jobs = load_jd()
+    company_jobs = [job for job in all_jobs if job["company"] == company]
+    return company_jobs 
 
 # Băm mật khẩu
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -169,12 +187,18 @@ def ocr_scan(request: Request, username: str):
 
 @app.get('/top10-best-jd', response_class=HTMLResponse)
 def top10_best_jd(request: Request, username: str):
-    job_description = load_jd()
+    job_descriptions = load_jd()
     users = load_users()
     user = users.get(username)
-    coin = user.get("coin", 0) if user else 0
-    if not job_description:
-        raise HTTPException(status_code=404, detail="Job not found")
+    company = user.get("company", "") if user else ""
+    # Không truyền biến job riêng lẻ, chỉ truyền job_descriptions (danh sách JD)
+    return templates.TemplateResponse("job-storage.html", {
+        "request": request,
+        "company": company,
+        "username": username,
+        "job_descriptions": job_descriptions
+    })
+    raise HTTPException(status_code=404, detail="Job not found")
     return templates.TemplateResponse("top10-best-jd.html", {"request": request, "username": username, "coin": coin, "job_description": job_description})
 
 @app.get('/top10-best-jd-detail', response_class=HTMLResponse)
@@ -207,10 +231,18 @@ def pricing(request: Request):
 @app.get("/job-detail/{job_id}", response_class=HTMLResponse)
 def job_detail(request: Request, username: str, job_id: int):
     job_descriptions = load_jd()
-    job = next((item for item in job_descriptions if item.id == job_id), None)
+    
+    # job_descriptions bây giờ là list dict, tìm job theo id
+    job = next((item for item in job_descriptions if item["id"] == job_id), None)
+
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
-    return templates.TemplateResponse("job-detail.html", {"request": request, "job": job, "username": username})
+    
+    # Truyền job dict sang template
+    return templates.TemplateResponse(
+        "job-detail.html", 
+        {"request": request, "job": job, "username": username}
+    )
 
 @app.get("/business-home", response_class=HTMLResponse)
 def business_home(request: Request):
@@ -278,29 +310,55 @@ def job_storage(request: Request, company: str, username: str):
     users = load_users()
     user = users.get(username)
     company = user.get("company", "") if user else ""
-    return templates.TemplateResponse("job-storage.html", {"request": request, "company": company, "username": username, "job_descriptions": job_descriptions})
+    job_position = load_jd_by_company(company)
+    return templates.TemplateResponse("job-storage.html", {"request": request, "company": company, "username": username, "job_position": job_position, "job_descriptions": job_descriptions})
+
+@app.get("/job-storage/{job_id}", response_class=HTMLResponse)
+def job_storage_detail(request: Request, company: str, username: str, job_id: int):
+    job_descriptions = load_jd()
+    users = load_users()
+    user = users.get(username)
+    company = user.get("company", "") if user else ""
+    job_position = load_jd_by_company(company)
+    job = get_job_detail_by_id(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return templates.TemplateResponse("job-storage.html", {"request": request, "company": company, "username": username, "job_position": job_position, "job_descriptions": job_descriptions, "job": job})
 
 @app.post("/submit-job", response_class=HTMLResponse)
-def submit_job(request: Request, company_logo: str = Form(...), job_title: str = Form(...), company_name: str = Form(...), salary: str = Form(...), location: str = Form(...), details: str = Form(...)):
+def submit_job(request: Request, company_logo: str = Form(...), job_title: str = Form(...), company_name: str = Form(...), salary: str = Form(...), location: str = Form(...), industry: str = Form(...), position: str = Form(...), company: str = Form(...), workplace: str = Form(...), job_description: str = Form(...), requirements: str = Form(...), benefits: str = Form(...), working_time: str = Form(...), application_method: str = Form(...), deadline: str = Form(...), username: str = Form(...)):
     job_descriptions = load_jd()
-    new_id = max((job.id for job in job_descriptions), default=0) + 1
-    try:
-        details_dict = json.loads(details)
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail="Details must be a valid JSON string.")
-    new_job = job_description(
-        id=new_id,
-        company_logo=company_logo,
-        job_title=job_title,
-        company_name=company_name,
-        salary=salary,
-        location=location,
-        details=details_dict
-    )
+    new_id = max([job["id"] for job in job_descriptions], default=0) + 1
+    # Tìm company_id cho công ty này, nếu chưa có thì gán mới
+    company_ids = {job["company"]: job["company_id"] for job in job_descriptions if "company_id" in job}
+    if company in company_ids:
+        company_id = company_ids[company]
+    else:
+        company_id = max(company_ids.values(), default=0) + 1
+    new_job = {
+        "id": new_id,
+        "company_id": company_id,
+        "company_logo": company_logo,
+        "job_title": job_title,
+        "company_name": company_name,
+        "salary": salary,
+        "location": location,
+        "industry": industry,
+        "position": position,
+        "company": company,
+        "workplace": workplace,
+        "job_description": job_description.split("\n"),
+        "requirements": requirements.split("\n"),
+        "benefits": benefits.split("\n"),
+        "working_time": working_time,
+        "application_method": application_method,
+        "deadline": deadline
+    }
     job_descriptions.append(new_job)
     with open(JD_FILE, "w", encoding="utf-8") as f:
-        json.dump([job.dict() for job in job_descriptions], f, ensure_ascii=False, indent=4)
-    return RedirectResponse(url="/business-dashboard", status_code=303)
+        json.dump(job_descriptions, f, ensure_ascii=False, indent=4)
+    return RedirectResponse(url=f"/job-storage?company={company}&username={username}", status_code=303)
+
 
 @app.get("/dang-tuyen-ngay", response_class=HTMLResponse)
 def dang_tuyen_ngay(request: Request, username: str):
@@ -315,3 +373,9 @@ def cv_detail_business(request: Request, username: str):
     user = users.get(username)
     company = user.get("company", "") if user else ""
     return templates.TemplateResponse("cv-detail-business.html", {"request": request, "username": username, "company": company})
+
+@app.get("/ho-so-cua-toi", response_class=HTMLResponse)
+def ho_so_cua_toi(request: Request, username: str):
+    users = load_users()
+    user = users.get(username)
+    return templates.TemplateResponse("ho-so-cua-toi.html", {"request": request, "username": username, "user": user})

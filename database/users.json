@@ -15,7 +15,8 @@
         "username": "cocacola_company",
         "password": "$2b$12$6TSyNWKCFCXeHaTcd5YpL.bZ0DeCtZFr/l8R848sIfxBakFSybt8.",
         "role": "business",
-        "company": "Coca Cola Company"
+        "company": "Coca Cola Company",
+        "company_id": 2
     },
     "huyhoang01": {
         "username": "huyhoang01",
@@ -25,9 +26,10 @@
     },
     "deercoffee": {
         "username": "deercoffee",
-        "password": "$2b$12$lPMUPbXufQsuh.D/tARf3O5IdAB1ZJNINMuJ0P5qIi9mEsH5mkeie",
+        "password": "$2a$12$35FSQUQvuiHICOlfLZcnm.7GatLiyRSUutlXSSljZ.p5p3JHLwdXK",
         "role": "business",
-        "company": "Deer Coffee"
+        "company": "Deer Coffee",
+        "company_id": 1
     },
     "hoang234": {
         "username": "hoang234",

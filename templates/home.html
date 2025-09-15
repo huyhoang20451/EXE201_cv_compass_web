@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="../static/favicon.ico">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=upload" />
+    <title>Home - CV Compass</title>
+</head>
+<body style="background-color: #F6FCFF">
+    <!--Bắt đầu phần header-->
+    <div class="header">
+        <div class="header-logo">
+            <img src="/static/images/Screenshot 2025-08-25 150046.png" alt="Logo CV Compass">
+        </div>
+        <div class="header-menu"> <!-- Menu lựa chọn -->
+            <ul>
+                <li><a href="/">Trang chủ</a></li>
+                <li><a href="/about-us">Về chúng tôi</a></li>
+                <li><a href="/">Tìm việc làm</a></li>
+                <li><a href="/auth/login">Quét CV bằng OCR</a></li>
+                <li><a href="/candidate/pricing">Gói dịch vụ</a></li>
+            </ul>
+        </div>
+        <div class="header-actions">
+            <button onclick="location.href='/auth/login'" class="btn btn-login">Đăng nhập</button>
+            <button onclick="location.href='/auth/signup'" class="btn btn-register">Đăng ký</button>
+        </div>
+        <div class="header-nhatuyendung">
+           <p class="cau_hoi">Bạn là nhà tuyển dụng?</p>
+           <p><a href="/business/business-home" target='_blank'>Đăng tin ngay</a></p>
+        </div>
+    </div> <!-- kết thúc phần header -->
+
+    <!--Bắt đầu phần introduction-->
+    <div class="introduction">
+        <div class="background_intro">
+            <!-- <img src="../img_bgr.png" alt="Introduction Image"> -->
+        </div>
+        <div class="content-introduction">
+            <div class="title_content">
+                <h1>CV Compass</h1>
+            </div>
+            <div class="description_content">
+                <h2>Công cụ giúp bạn hiểu rõ hơn về hồ sơ ứng tuyển của mình</h2>
+            </div>
+            <div class="button_content">
+                <button onclick="location.href='/auth/login'" class="btn btn-upload-cv">Tải CV ngay <span class="material-symbols-outlined">upload</span></button>
+            </div>
+        </div>
+    </div> <!-- kết thúc phần introduction -->
+    <div class="how-it-works"> <!--giới thiệu cách hoạt động-->
+        <div class="header-instruction">
+            <h2>Cách CV Compass hoạt động</h2>
+        </div>
+        <div class="step-by-step">
+            <ul>
+                    <div class="how-step">
+                        <div class="how-icon"><i class="fa-solid fa-upload"></i></div>
+                        <div class="how-label">Tải File CV lên</div>
+                    </div>
+                    <div class="how-step">
+                        <div class="how-icon"><i class="fa-solid fa-file-lines"></i></div>
+                        <div class="how-label">Quét OCR</div>
+                    </div>
+                    <div class="how-step">
+                        <div class="how-icon"><i class="fa-solid fa-brain"></i></div>
+                        <div class="how-label">Phân tích bằng LLM</div>
+                    </div>
+                    <div class="how-step">
+                        <div class="how-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+                        <div class="how-label">So sánh CV – JD</div>
+                    </div>
+            </ul>
+        </div>
+    </div> <!-- kết thúc phần giới thiệu cách hoạt động-->
+    <div class="thanh-timkiemvavitri"> <!--thanh tìm kiếm vị trí-->
+        <input type="text" placeholder="🔍Tìm kiếm công việc">
+        <input type="text" placeholder="⛳Vị trí">
+        <button>Tìm kiếm</button>
+    </div> <!-- kết thúc thanh tìm kiếm vị trí -->
+    <div class="phan_congvieclienquan"> <!--Bắt đầu phần công việc liên quan-->
+        <div class="filter-selection" style="display: flex; align-items: center; gap: 24px; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px; font-weight: bold; color: #3674B5;">
+                <label for="filter-by">Lọc theo:</label>
+                <select id="filter-by" name="filter-by" style="border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
+                    <option value="all">Tất cả</option>
+                    <option value="full-time">Toàn thời gian</option>
+                    <option value="part-time">Bán thời gian</option>
+                    <option value="internship">Thực tập</option>
+                </select>
+            </div>
+            <div class="header-chance-recruit"><h2>Cơ hội tuyển dụng hôm nay</h2></div>
+        </div>
+        
+        <section onclick="location.href='/auth/login'" class="job-listing-grid">
+                {%for jd in job_descriptions%}
+                    <div class="job-card">
+                        <div class="job-card-logo">
+                            <img src="{{jd.company_logo}}" alt="{{jd.company_name}}">
+                        </div>
+                        <div class="job-card-content">
+                            <div class="job-card-title">{{jd.job_title}}</div>
+                            <div class="job-card-company">{{jd.company_name}}</div>
+                            <div class="job-card-tags">
+                                <span class="job-tag">{{jd.salary}}</span>
+                                <span class="job-tag">{{jd.location}}</span>
+                            </div>
+                        </div>
+                        <button class="job-card-fav"><i class="fa-regular fa-heart"></i></button>
+                    </div>
+                {% endfor %}
+        </section>
+        </div>
+    </div> <!-- kết thúc phần công việc liên quan-->
+    <div class="sotrang">
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>...</p>
+        <p>14</p>
+        <p>15</p>
+        <p class="noibat">&gt;</p>
+    </div>
+    <!--Tạo đường kẻ-->
+    <!-- <div class="divider">
+        <hr>
+        <br>
+    </div> -->
+    <div class="header-discover">
+        <h2>Khám phá việc làm theo lĩnh vực</h2>
+    </div>
+
+    <div class="job-category_section"> <!--Bắt đầu phần khám phá việc làm theo lĩnh vực-->
+        <div class="job-category-list">
+            <div class="job-category-detail">
+                <p class="job-category-logo"><i class="fa-solid fa-laptop-code"></i></p>
+                <div class="job_name">Lập trình viên</div>
+                <h5 class="no_of_category">4000 nhà tuyển dụng</h5>
+            </div>
+            <div class="job-category-detail">
+                <p class="job-category-logo"><i class="fa-solid fa-palette"></i></p>
+                <div class="job_name">Thiết kế đồ họa</div>
+                <h5 class="no_of_category">3000 nhà tuyển dụng</h5>
+            </div>
+            <div class="job-category-detail">
+                <p class="job-category-logo"><i class="fa-solid fa-briefcase"></i></p>
+                <div class="job_name">Quản lý dự án</div>
+                <h5 class="no_of_category">2000 nhà tuyển dụng</h5>
+            </div>
+            <div class="job-category-detail">
+                <p class="job-category-logo"><i class="fa-solid fa-bullhorn"></i></p>
+                <div class="job_name">Marketing</div>
+                <h5 class="no_of_category">1500 nhà tuyển dụng</h5>
+            </div>
+            <div class="job-category-detail">
+                <p class="job-category-logo"><i class="fa-solid fa-chart-line"></i></p>
+                <div class="job_name">Phân tích dữ liệu </div>
+                <h5 class="no_of_category">1000 nhà tuyển dụng</h5>
+            </div>
+            <div class="job-category-detail">
+                <p class="job-category-logo"><i class="fa-solid fa-chart-line"></i></p>
+                <div class="job_name">Khoa học dữ liệu </div>
+                <h5 class="no_of_category">1500 nhà tuyển dụng</h5>
+            </div>
+        </div>
+    </div> <!-- kết thúc phần khám phá việc làm theo lĩnh vực-->
+    <div class="chance-concern">Có thể bạn quan tâm</div>
+    </div>
+    
+    <section onclick="location.href='/auth/login'" class="job-listing-grid">
+                {%for jd in job_descriptions%}
+                    <div class="job-card">
+                        <div class="job-card-logo">
+                            <img src="{{jd.company_logo}}" alt="{{jd.company_name}}">
+                        </div>
+                        <div class="job-card-content">
+                            <div class="job-card-title">{{jd.job_title}}</div>
+                            <div class="job-card-company">{{jd.company_name}}</div>
+                            <div class="job-card-tags">
+                                <span class="job-tag">{{jd.salary}}</span>
+                                <span class="job-tag">{{jd.location}}</span>
+                            </div>
+                        </div>
+                        <button class="job-card-fav"><i class="fa-regular fa-heart"></i></button>
+                    </div>
+                {% endfor %}
+            </section>
+        </div>
+    <div class="pages_number">
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>...</p>
+        <p class="noibat">&gt;</p>
+    </div>
+    <h1 class="features_title">Tính năng nổi bật</h1>
+    <div class="features_block"> <!--Bắt đầu phần tính năng nổi bật-->
+        <div class="features_list">
+            <div class="feature_item">
+                <img style="width: 100px; height: 100px;" class="feature_icon" src="/static/images/features_image/OCR_image.png" alt="Feature 1">
+                <h3 class="feature_title">OCR - Quét nội dung từ CV ảnh/PDF</h3>
+            </div>
+            <div class="feature_item">
+                <img style="width: 100px; height: 100px;" class="feature_icon" src="/static/images/features_image/LLM_image.png" alt="Feature 2">
+                <h3 class="feature_title">LLM - Phân tích ngữ nghĩa, ngữ cảnh</h3>
+            </div>
+            <div class="feature_item">
+                <img style="width: 100px; height: 100px;" class="feature_icon" src="/static/images/features_image/cv_comparison.png" alt="Feature 3">
+                <h3 class="feature_title">So sánh CV - JD để đánh giá mức độ phù hợp</h3>
+            </div>
+            <div class="feature_item">
+                <img style="width: 100px; height: 100px;" class="feature_icon" src="/static/images/features_image/advicer.png" alt="Feature 4">
+                <h3 class="feature_title">Tư vấn cải thiện - Gợi ý chỉnh CV dễ hiểu</h3>
+            </div>
+            </div> <!-- kết thúc features_list -->
+        </div> <!-- kết thúc phần tính năng nổi bật-->
+
+    <footer class="footer">
+        <div class="footer-contact">
+            <div class="footer-contact-item">
+                <i class="fa fa-phone"></i>
+                <span>0123456789</span>
+    </div>
+    <div class="footer-contact-item">
+      <i class="fa fa-envelope"></i>
+      <span>hexacode@gmail.com</span>
+    </div>
+  </div>
+  <div class="footer-logo">
+    <img src="/static/images/hexacode_logo.png" alt="Hexacode Logo" class="footer-logo-img">
+    <div class="footer-logo-text">HEXACODE</div>
+  </div>
+  <div class="footer-links">
+    <div class="footer-links-group">
+      <div class="footer-links-title">Overview</div>
+      <a href="#">App</a>
+    </div>
+    <div class="footer-links-group">
+      <div class="footer-links-title">Company</div>
+      <a href="home.html">Home</a>
+      <a href="about-us.html">About us</a>
+      <a href="#">Pricing</a>
+    </div>
+    <div class="footer-links-group">
+      <div class="footer-links-title">Follow us</div>
+      <a href="#"><i class="fa fa-facebook"></i> CVCompass</a>
+      <a href="#"><i class="fa fa-tiktok"></i> CVCompass</a>
+    </div>
+  </div>
+</footer> 
+</body>
+</html>

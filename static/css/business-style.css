@@ -1,0 +1,274 @@
+/* Reset CSS cơ bản */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #F6FCFF;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ===== HEADER ===== */
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 50px;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-logo img {
+  height: 50px;
+}
+
+.header-menu ul {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+.header-menu ul li a {
+  text-decoration: none;
+  font-weight: 500;
+  color: #004080;
+  transition: color 0.3s ease;
+}
+
+.header-menu ul li a:hover {
+  color: #ff6b00;
+}
+
+.header-actions button {
+  border: none;
+  outline: none;
+  padding: 10px 18px;
+  border-radius: 25px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-login {
+  background: transparent;
+  border: 2px solid #004080;
+  color: #004080;
+}
+
+.btn-register {
+  background: #004080;
+  color: #fff;
+}
+
+/* ===== INTRODUCTION ===== */
+.background_intro {
+    background-image: url('/static/images/img_bgr.png');
+    background-size: cover;
+    height: 100px;
+}
+
+.introduction {
+  /* display: flex; */
+  justify-content: space-between;
+  align-items: center;
+  padding: 60px 80px;
+  background: linear-gradient(180deg, #F6FCFF 0%, #ffffff 100%);
+  gap: 40px;
+}
+
+.content-introduction {
+  display: flex;
+  flex-direction: column;
+  max-width: 50%;
+  flex: 1;
+}
+
+.title_content h1 {
+  font-size: 36px;
+  color: #004080;
+  margin-bottom: 20px;
+}
+
+.description_content ul {
+  list-style: none;
+}
+
+.description_content ul li {
+  font-size: 18px;
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 25px;
+}
+
+.description_content ul li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: #ff6b00;
+}
+
+.two_button_actions {
+  margin-top: 20px;
+}
+
+.two_button_actions button {
+  padding: 12px 20px;
+  margin-right: 15px;
+  border: none;
+  border-radius: 25px;
+  background: #004080;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.two_button_actions button:hover {
+  background: #ff6b00;
+}
+
+.image-demonstrate img {
+  max-width: 450px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== SECTIONS ===== */
+.dang-tin-ngay, .chonloc, .manage-recruit-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 80px;
+}
+
+.dang-tin-ngay h1, .chonloc-header h1, .manage-content-header h1 {
+  font-size: 30px;
+  color: #004080;
+  margin-bottom: 20px;
+}
+
+.dang-tin-ngay ul, .chonloc-content ul, .manage-content-list ul {
+  list-style: none;
+}
+
+.dang-tin-ngay ul li, .chonloc-content ul li, .manage-content-list ul li {
+  margin-bottom: 12px;
+  font-size: 18px;
+  padding-left: 25px;
+  position: relative;
+}
+
+.dang-tin-ngay ul li::before,
+.chonloc-content ul li::before,
+.manage-content-list ul li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: #ff6b00;
+}
+
+/* ===== FEATURES ===== */
+.features_title {
+  text-align: center;
+  font-size: 32px;
+  color: #004080;
+  margin: 50px 0 30px;
+}
+
+.features_block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.features_list {
+  display: flex;
+  gap: 50px;
+}
+
+.feature_item {
+  text-align: center;
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+  width: 200px;
+  transition: transform 0.3s ease;
+}
+
+.feature_item:hover {
+  transform: translateY(-10px);
+}
+
+.feature_title {
+  font-size: 18px;
+  margin-top: 12px;
+  color: #004080;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  background: white;
+  color: #333;
+  padding: 40px 60px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.footer-contact-item {
+  margin-bottom: 12px;
+}
+
+.footer-contact-item i {
+  margin-right: 10px;
+}
+
+.footer-logo {
+  text-align: center;
+}
+
+.footer-logo-img {
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+.footer-logo-text {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.footer-links {
+  display: flex;
+  gap: 50px;
+}
+
+.footer-links-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-links-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.footer-links-group a {
+  color: #333;
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.footer-links-group a:hover {
+  color: #ff6b00;
+}

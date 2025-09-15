@@ -1,0 +1,1 @@
+# Chứa hàm, class cho phép các module khác thấy và sử dụng

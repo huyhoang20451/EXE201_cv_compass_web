@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/static/css/business-style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=upload" />
-    <title>Home (Business) - CV Compass</title>
+    <title>Quản lý JD - CV Compass</title>
 </head>
 <style>
     * {
@@ -250,12 +250,13 @@ body {
         <aside class="sidebar">
         <h3>Thư mục</h3>
         <ul>
-            <li class="active">Business Analyst</li>
-            <li>Business Analyst</li>
-            <li>Business Analyst</li>
-            <li>Marketing</li>
-            <li>Marketing</li>
-            <li>Marketing</li>
+            {% for jd in job_position %}
+            <li class={%if job and jd.id == job.id%} "active"{% endif %}>
+                <a href="/business/job-storage/{{ jd.id }}?username={{username}}&role={{role}}&company={{company}}">
+                    {{ jd.job_title }}
+                </a>
+            </li>
+            {% endfor %}
         </ul>
         </aside>
 
@@ -269,45 +270,57 @@ body {
         <input type="date" value="2025-01-01">
       </div>
 
-      <!-- Job Info -->
       <section class="job-card">
-        <h3>Nhân Viên Kinh Doanh - Nghỉ Dưỡng Cao Cấp (Hồ Chí Minh)</h3>
-        <div class="job-meta">
-          <span>Lương thỏa thuận - Full time</span>
-          <span>Địa điểm: Thành phố Hồ Chí Minh</span>
-          <span>Ngày hết hạn: 17/07/2025</span>
-        </div>
-        <div class="job-highlight">
-          <div class="score">
-            <p>Số lượng CV</p>
-            <h1>58</h1>
-            <button>Đề Cử Top 20 CV</button>
-          </div>
-          <div class="company">
-            <p><strong>Mab</strong> Newwave Centre Ventures</p>
-            <p>Ngành nghề: Bất động sản</p>
-            <p>Quy mô: 1000 người</p>
-            <p>Địa điểm: 63-67 An Điềm, Phường 10, Quận 5, TP. Hồ Chí Minh</p>
-          </div>
-        </div>
-      </section>
+  {% if job %}
+    <!-- Job Summary -->
+    <h3>{{ job.job_title }}</h3>
+    <div class="job-meta">
+      <span>Lương thỏa thuận - {{ job.salary }}</span>
+      <span>Địa điểm: {{ job.location }}</span>
+      <span>Ngày hết hạn: {{ job.deadline }}</span>
+    </div>
+    <div class="job-highlight">
+      <div class="score">
+        <p>Số lượng CV</p>
+        <h1>58</h1>
+        <button>Đề Cử Top 20 CV</button>
+      </div>
+      <div class="company">
+        <p><strong>{{ job.company_name }}</strong></p>
+        <p>Ngành nghề: {{ job.industry }}</p>
+        <p>Quy mô: {{ job.workplace }}</p>
+        <p>Địa điểm: {{ job.location }}</p>
+      </div>
+    </div>
+    <!-- Job Details -->
+    <div class="job-detail">
+      <h4>Mô tả công việc</h4>
+      <div class="buttons">
+        <button class="edit">Chỉnh sửa</button>
+        <button class="delete">Xóa</button>
+      </div>
+      <p>{{ job.description }}</p>
 
-      <!-- Job Detail -->
-      <section class="job-detail">
-        <h4>Thông tin chi tiết</h4>
-        <div class="buttons">
-          <button class="edit">Chỉnh sửa</button>
-          <button class="delete">Xóa</button>
-        </div>
-        <p><strong>A. Mô tả công việc</strong><br>
-          <li> Tìm kiếm và phát triển nguồn khách hàng tiềm năng...</li><br><br>
-          <strong>B. Yêu cầu ứng viên</strong><br>
-          <li> Nam/Nữ tuổi từ 22 - 35...</li><br><br>
-          <strong>C. Quyền lợi</strong><br>
-          <li> Thu nhập: 15-30 triệu VNĐ...</li><br>
-        </p>
-        <button onclick="location.href='/business/cv-detail-business?username={{username}}&company={{company}}'" class="view-cv">Xem danh sách CV</button>
-      </section>
+      <h4>Yêu cầu công việc</h4>
+      <p>{{ job.requirements }}</p>
+
+      <h4>Quyền lợi</h4>
+      <p>{{ job.benefits }}</p>
+
+      <h4>Thời gian làm việc</h4>
+      <p>{{ job.working_time }}</p>
+
+      <h4>Hình thức ứng tuyển</h4>
+      <p>{{ job.application_method }}</p>
+
+      <button class="view-cv">Xem CV ứng tuyển</button>
+  {% else %}
+    <div class="job-card-empty">
+      <p>Chọn một JD ở bên trái để xem chi tiết.</p>
+    </div>
+  {% endif %}
+</section>
+
     </main>
   </div>
 

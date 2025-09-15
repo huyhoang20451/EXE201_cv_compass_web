@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="../static/favicon.ico">
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=upload" />
-    <title>Home (Business) - CV Compass</title>
+    <title>Đăng tuyển ngay cùng CV Compass</title>
 </head>
 <style>
     .form-container {
@@ -70,10 +70,10 @@
         </div>
         <div class="header-menu"> <!-- Menu lựa chọn -->
             <ul>
-                <li><a method='get' href="#">Trang chủ</a></li>
+                <li><a method='get' href="/business/business-dashboard?username={{username}}&role={{role}}&company={{company}}">Trang chủ</a></li>
                 <li><a method="get" href="/business/job-storage?company={{company}}">Quản lý JD</a></li>
-                <li><a method="get" href="#">Danh sách CV</a></li>
-                <li><a method="get" href="#">Quét CV tự động</a></li>
+                <li><a method="get" href="/business/cv-detail-business?username={{username}}&company={{company}}">Danh sách CV</a></li>
+                <li><a method="get" href="/business/cv-detail-business?username={{username}}&company={{company}}">Quét CV tự động</a></li>
                 <li><a method="get" href="/business/pricing-business-logged-in?username={{username}}&role={{role}}&company={{company}}">Nâng cấp Premium</a></li>
             </ul>
         </div>
@@ -122,68 +122,92 @@
         </div>
     </div> <!-- kết thúc phần introduction -->
     <div class="form-container">
-        <form action="/business/submit-job" method="POST">
+        <form action="/submit-job" method="POST">
+            <input type="hidden" name="company" value="{{company}}">
+            <input type="hidden" name="username" value="{{username}}">
+            <!-- ID sẽ tự sinh ở backend, không cần nhập -->
+
             <div class="form-group">
-                <label for="company_logo">Logo công ty (URL)</label>
-                <input type="url" id="company_logo" name="company_logo" placeholder="Dán link ảnh logo" required>
+                <label for="company-logo">Logo công ty (URL):</label>
+                <input type="text" id="company-logo" name="company_logo" placeholder="Nhập URL logo công ty" required>
             </div>
+
             <div class="form-group">
-                <label for="company_name">Tên công ty</label>
+                <label for="job_title">Chức danh công việc:</label>
+                <input type="text" id="job_title" name="job_title" placeholder="Nhập chức danh công việc" required>
+            </div>
+
+            <div class="form-group">
+                <label for="company_name">Tên công ty:</label>
                 <input type="text" id="company_name" name="company_name" placeholder="Nhập tên công ty" required>
             </div>
+
             <div class="form-group">
-                <label for="job_title">Chức danh tuyển dụng</label>
-                <input type="text" id="job_title" name="job_title" placeholder="Nhập chức danh tuyển dụng" required>
+                <label for="salary">Lương:</label>
+                <input type="text" id="salary" name="salary" placeholder="Nhập lương" required>
             </div>
+
             <div class="form-group">
-                <label for="salary">Mức lương</label>
-                <input type="text" id="salary" name="salary" placeholder="VD: 25.000.000 - 35.000.000 VNĐ" required>
+                <label for="location">Địa điểm:</label>
+                <input type="text" id="location" name="location" placeholder="Nhập địa điểm" required>
             </div>
+
+            <div>Thông tin chi tiết:</div>
             <div class="form-group">
-                <label for="location">Địa điểm làm việc</label>
-                <input type="text" id="location" name="location" required>
-            </div>
-            <div class="form-group">
-                <label for="industry">Ngành nghề</label>
+                <label for="industry">Ngành nghề:</label>
                 <input type="text" id="industry" name="industry" placeholder="Nhập ngành nghề" required>
             </div>
+
             <div class="form-group">
-                <label for="position">Vị trí</label>
-                <input type="text" id="position" name="position">
+                <label for="position">Vị trí:</label>
+                <input type="text" id="position" name="position" placeholder="Nhập vị trí" required>
+            </div>
+            <div class="form-group">
+                <label for="company">Tên công ty:</label>
+                <input type="text" id="company" name="company" placeholder="Tên công ty" required>
+            </div>
+            <div>
+                <label for="workplace">Địa điểm làm việc:</label>
+                <input type="text" id="workplace" name="workplace" placeholder="Nhập địa điểm làm việc" required>
             </div>
 
             <div class="form-group">
-                <label for="job_description">Mô tả công việc</label>
-                <textarea id="job_description" name="job_description"></textarea>
+                <label for="job_description">Mô tả công việc:</label>
+                <textarea id="job_description" name="job_description" placeholder="Nhập mỗi mô tả trên 1 dòng" required></textarea>
             </div>
-
             <div class="form-group">
-                <label for="requirements">Yêu cầu</label>
-                <textarea id="requirements" name="requirements" placeholder="Nhập mỗi yêu cầu trên 1 dòng"></textarea>
+                <label for="requirements">Yêu cầu:</label>
+                <textarea id="requirements" name="requirements" placeholder="Nhập mỗi yêu cầu trên 1 dòng" required></textarea>
             </div>
-
             <div class="form-group">
-                <label for="benefits">Quyền lợi</label>
-                <textarea id="benefits" name="benefits" placeholder="Nhập mỗi quyền lợi trên 1 dòng"></textarea>
+                <label for="benefits">Quyền lợi:</label>
+                <textarea id="benefits" name="benefits" placeholder="Nhập mỗi quyền lợi trên 1 dòng" required></textarea>
             </div>
-
             <div class="form-group">
-                <label for="working_time">Thời gian làm việc</label>
-                <input type="text" id="working_time" name="working_time" placeholder="VD: Thứ 2 - Thứ 6, 9:00 - 18:00">
+                <label for="working_time">Thời gian làm việc:</label>
+                <input type="text" id="working_time" name="working_time" placeholder="Nhập thời gian làm việc" required>
             </div>
-
             <div class="form-group">
-                <label for="application_method">Cách ứng tuyển</label>
-                <textarea id="application_method" name="application_method"></textarea>
+                <label for="application_method">Cách ứng tuyển:</label>
+                <input type="text" id="application_method" name="application_method" placeholder="Nhập cách ứng tuyển" required>
             </div>
-
             <div class="form-group">
-                <label for="deadline">Hạn nộp hồ sơ</label>
-                <input type="date" id="deadline" name="deadline">
+                <label for="deadline">Hạn nộp hồ sơ:</label>
+                <input type="text" id="deadline" name="deadline" placeholder="Nhập hạn nộp hồ sơ" required>
             </div>
-
-            <button type="submit" class="btn-submit">Đăng Tuyển</button>
+            <button type="submit" class="btn-submit">Đăng tin</button>
         </form>
+        <script>
+        document.querySelector('form').onsubmit = function(e) {
+            function toJson(name) {
+                const val = document.getElementById(name).value;
+                return JSON.stringify(val.split('\n').filter(x => x.trim() !== ''));
+            }
+            document.getElementById('job_description').value = toJson('job_description');
+            document.getElementById('requirements').value = toJson('requirements');
+            document.getElementById('benefits').value = toJson('benefits');
+        };
+        </script>
     </div>
 </body>
 </html>

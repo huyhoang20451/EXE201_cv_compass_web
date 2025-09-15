@@ -64,9 +64,9 @@
                 box.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
                 box.style.padding = '10px';
                 box.innerHTML = `
-                    <p><a href="#" style="text-decoration:none;color:#222;">Hồ sơ của tôi</a></p>
-                    <p><a href="#" style="text-decoration:none;color:#222;">CV của tôi</a></p>
-                    <p><a href="#" style="text-decoration:none;color:#222;">Cài đặt tài khoản</a></p>
+                    <p><a href="/edit-profile?username={{username}}" style="text-decoration:none;color:#222;">Hồ sơ của tôi</a></p>
+                    <p><a href="/mycv-settings?username={{username}}" style="text-decoration:none;color:#222;">CV của tôi</a></p>
+                    <p><a href="/system-settings?username={{username}}" style="text-decoration:none;color:#222;">Cài đặt tài khoản</a></p>
                     <p><a href="/home" style="text-decoration:none;color:#222;">Đăng xuất</a></p>
                 `;
                 document.body.appendChild(box);
@@ -81,7 +81,7 @@
 
         <div class="header-nhatuyendung">
            <p class="cau_hoi">Bạn là nhà tuyển dụng?</p>
-           <p><a href="#">Đăng tin ngay</a></p>
+           <p><a href="/business/business-home" target='_blank'>Đăng tin ngay</a></p>
         </div>
     </div> <!-- kết thúc phần header -->
     <div class="introduction"> <!-- Bắt đầu phần tựa đề -->
@@ -123,7 +123,7 @@
       <div class="jd-detail-section">
         <span class="section-title">Mô tả công việc:</span>
         <ul>
-          {% for task in job.details.tasks %}
+          {% for task in job.tasks %}
             <li>{{ task }}</li>
           {% endfor %}
         </ul>
@@ -131,7 +131,7 @@
       <div class="jd-detail-section">
         <span class="section-title">Yêu cầu:</span>
         <ul>
-          {% for req in job.details.requirements %}
+          {% for req in job.requirements %}
             <li>{{ req }}</li>
           {% endfor %}
         </ul>
@@ -139,7 +139,7 @@
       <div class="jd-detail-section">
         <span class="section-title">Quyền lợi:</span>
         <ul>
-          {% for benefit in job.details.benefits %}
+          {% for benefit in job.benefits %}
             <li>{{ benefit }}</li>
           {% endfor %}
         </ul>
@@ -147,17 +147,17 @@
       <div class="jd-detail-section">
         <span class="section-title">Thời gian làm việc:</span>
         <ul>
-          <li>{{ job.details.working_time }}</li>
+          <li>{{ job.working_time }}</li>
         </ul>
       </div>
       <div class="jd-detail-section">
         <span class="section-title">Cách ứng tuyển:</span>
         <ul>
-          <li>{{ job.details.application_method }}</li>
+          <li>{{ job.application_method }}</li>
         </ul>
       </div>
       <div class="jd-detail-apply">
-        <span class="deadline">Hạn nộp hồ sơ: {{ job.details.deadline }}</span>
+        <span class="deadline">Hạn nộp hồ sơ: {{ job.deadline }}</span>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal">Ứng tuyển ngay</button>
         <!-- Modal -->
         <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">

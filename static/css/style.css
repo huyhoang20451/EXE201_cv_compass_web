@@ -1345,3 +1345,212 @@ body { background: #F6FCFF; }
       .jd-detail-container { flex-direction: column; gap: 18px; }
       .jd-detail-col { min-width: unset; }
     }
+
+/* ========== Settings System Page ========== */
+.highlight {
+  color: #004aad;
+  margin-bottom: 20px;
+}
+
+.setting-section {
+  margin-bottom: 25px;
+}
+
+.setting-section h4 {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.setting-section select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.preview-box {
+  margin-top: 10px;
+  padding: 12px;
+  background: #f8f8f8;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.actions {
+  margin-top: 20px;
+}
+
+.reset-btn {
+  background: #e0e0e0;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+/* ========== Jobs Page ========== */
+header {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.search-box {
+  margin-top: 15px;
+}
+
+.search-box input {
+  padding: 10px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.search-btn {
+  padding: 10px 15px;
+  margin-left: 5px;
+  background: #004aad;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.jobs-container {
+  display: flex;
+  padding: 20px 40px;
+}
+
+/* Bộ lọc */
+.filter {
+  width: 220px;
+  background: #f9fbff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-right: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.filter h3 {
+  margin-bottom: 15px;
+  color: #004aad;
+}
+
+.filter h4 {
+  margin: 15px 0 8px;
+  font-size: 14px;
+}
+
+.filter label {
+  font-size: 13px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.filter select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.apply-btn {
+  width: 100%;
+  background: #f2c94c;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reset-btn {
+  width: 100%;
+  background: #ddd;
+  border: none;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Danh sách việc */
+.job-list {
+  flex: 1;
+}
+
+.job-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.job-info {
+  flex: 1;
+  margin-left: 15px;
+}
+
+.job-info h4 {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.job-info p {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.job-actions {
+  text-align: right;
+}
+
+.cv-detail {
+  color: #004aad;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.btn-orange {
+  background: #f2994a;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.btn-blue {
+  background: #2d9cdb;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Phân trang */
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pagination span {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination .active {
+  background: #004aad;
+  color: #fff;
+}

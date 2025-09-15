@@ -188,13 +188,8 @@ def ocr_scan(request: Request, username: str):
 @app.get('/top10-best-jd', response_class=HTMLResponse)
 def top10_best_jd(request: Request, username: str):
     job_descriptions = load_jd()
-    users = load_users()
-    user = users.get(username)
-    company = user.get("company", "") if user else ""
-    # Không truyền biến job riêng lẻ, chỉ truyền job_descriptions (danh sách JD)
-    return templates.TemplateResponse("job-storage.html", {
+    return templates.TemplateResponse("top10-best-jd.html", {
         "request": request,
-        "company": company,
         "username": username,
         "job_descriptions": job_descriptions
     })
@@ -292,7 +287,7 @@ def get_coin(username: str):
 @app.get("/top10-best-jd-detail-unblur/job_id={job_id}", response_class=HTMLResponse)
 def top10_best_jd_detail_unblur(request: Request, username: str, job_id: int):
     job_descriptions = load_jd()
-    job = next((item for item in job_descriptions if item.id == job_id), None)
+    job = next((item for item in job_descriptions if item["id"] == job_id), None)
     users = load_users()
     user = users.get(username)
     coin = user.get("coin", 0) if user else 0
@@ -374,8 +369,32 @@ def cv_detail_business(request: Request, username: str):
     company = user.get("company", "") if user else ""
     return templates.TemplateResponse("cv-detail-business.html", {"request": request, "username": username, "company": company})
 
-@app.get("/ho-so-cua-toi", response_class=HTMLResponse)
-def ho_so_cua_toi(request: Request, username: str):
+# @app.get("/ho-so-cua-toi", response_class=HTMLResponse)
+# def ho_so_cua_toi(request: Request, username: str):
+#     users = load_users()
+#     user = users.get(username)
+#     return templates.TemplateResponse("ho-so-cua-toi.html", {"request": request, "username": username, "user": user})
+
+@app.get("/edit-profile", response_class=HTMLResponse)
+def edit_profile(request: Request, username: str):
     users = load_users()
     user = users.get(username)
-    return templates.TemplateResponse("ho-so-cua-toi.html", {"request": request, "username": username, "user": user})
+    return templates.TemplateResponse("settings.html", {"request": request, "username": username, "user": user})
+
+@app.get("/mycv-settings", response_class=HTMLResponse)
+def mycv_settings(request: Request, username: str):
+    users = load_users()
+    user = users.get(username)
+    return templates.TemplateResponse("mycv-settings.html", {"request": request, "username": username, "user": user})
+
+@app.get("/system-settings", response_class=HTMLResponse)
+def system_settings(request: Request, username: str):
+    users = load_users()
+    user = users.get(username)
+    return templates.TemplateResponse("system-settings.html", {"request": request, "username": username, "user": user})
+
+@app.get("/finding-jobs", response_class=HTMLResponse)
+def finding_jobs(request: Request, username: str):
+    users = load_users()
+    user = users.get(username)
+    return templates.TemplateResponse("finding-jobs.html", {"request": request, "username": username, "user": user})

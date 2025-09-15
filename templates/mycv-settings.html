@@ -7,17 +7,211 @@
     <link rel="stylesheet" href="/static/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=upload" />
-    <title>Về chúng tôi - CV Compass</title>
+    <title>Cài đặt tài khoản - CV của tôi</title>
 </head>
-<body style="background-color: #F6FCFF;">
+<style>
+    /* Reset cơ bản */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f8fbff;
+}
+
+/* Container chia layout */
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #eaf1fb;
+  padding: 20px;
+}
+
+.sidebar .back-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sidebar .menu {
+  list-style: none;
+}
+
+.sidebar .menu li {
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+
+.sidebar .menu li:hover,
+.sidebar .menu .active {
+  background: #fff;
+  font-weight: bold;
+}
+
+/* Main content */
+.main {
+  flex: 1;
+  padding: 30px 40px;
+}
+
+.main h1 {
+  text-align: center;
+  color: #004aad;
+  margin-bottom: 10px;
+}
+
+.main h3 {
+  margin: 10px 0 20px;
+  color: #004aad;
+}
+
+/* Profile avatar */
+.profile {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  text-align: center;
+}
+
+.avatar img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.upload-btn {
+  background: #e6e6e6;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Note text */
+.note {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+/* Form */
+.form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  margin: 0 auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.form label span {
+  color: red;
+}
+
+.form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.save-btn {
+  background: #f2c94c;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  display: block;
+  margin: 0 auto;
+}
+/* CV item */
+.cv-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.cv-item .company-logo {
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
+}
+
+.cv-info {
+  flex: 1;
+}
+
+.cv-info h4 {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.cv-info p {
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #444;
+}
+
+.cv-detail {
+  color: #004aad;
+  font-weight: bold;
+  text-decoration: none;
+  align-self: center;
+  margin-left: 15px;
+}
+.cv-detail:hover {
+  text-decoration: underline;
+}
+
+</style>
+<body style="background-color: #F6FCFF">
     <!--Bắt đầu phần header-->
     <div class="header">
         <div class="header-logo">
-            <img src="static/images/Screenshot 2025-08-25 150046.png" alt="Logo CV Compass">
+            <img src="/static/images/Screenshot 2025-08-25 150046.png" alt="Logo CV Compass">
         </div>
         <div class="header-menu"> <!-- Menu lựa chọn -->
             <ul>
-                <li><a method="get" href="/home-logged-in?username={{username}}">Trang chủ</a></li>
+                <li><a method='get' href="/home-logged-in?username={{username}}">Trang chủ</a></li>
                 <li><a method="get" href="/aboutus-logged-in?username={{username}}">Về chúng tôi</a></li>
                 <li><a method="get" href="/finding-jobs?username={{username}}">Tìm việc làm</a></li>
                 <li><a method="get" href="/ocr-scan-logged-in?username={{username}}">Quét CV bằng OCR</a></li>
@@ -44,10 +238,8 @@
             }
             // Gọi hàm khi trang được tải
             window.onload = fetchCoin;
-                
             </script>
         </div>
-
         <div class="user-avatar">
             <img onclick="boxAppear()" style="width: 40px; height: 40px; border-radius: 50%;" src="/static/images/user_avatar.png" alt="User Avatar">
         </div>
@@ -77,88 +269,64 @@
                 });
             }
         </script>
-
         <div class="header-nhatuyendung">
            <p class="cau_hoi">Bạn là nhà tuyển dụng?</p>
            <p><a href="/business-home" target='_blank'>Đăng tin ngay</a></p>
         </div>
     </div> <!-- kết thúc phần header -->
-    <div class="introduction"> <!-- Bắt đầu phần tựa đề -->
+
+    <!--Bắt đầu phần introduction-->
+    <div class="introduction">
         <div class="background_intro">
             <!-- <img src="../img_bgr.png" alt="Introduction Image"> -->
         </div>
         <div class="content-introduction">
             <div class="title_content">
-                <h1 style="font-size: 2.5rem; font-weight: bold; color: #3674B5">Về chúng tôi - CV Compass</h1>
+                <h1>Cài đặt</h1>
             </div>
         </div>
-    </div> <!-- kết thúc phần tựa đề -->
-
-    <div class="introduction-part-aboutus"> <!-- Bắt đầu phần giới thiệu về chúng tôi -->
-        <div class="content-intro-aboutus">
-            <p><span class="intro-title">CV Compass</span> là dự án khởi nghiệp phát triển bởi nhóm sinh viên yêu thích công nghệ và nhân sự, với mong muốn giúp người tìm việc - đặc biệt là <i>sinh viên</i> và <i>người mới ra trường</i> - hiểu rõ và cải thiện CV của mình một cách dễ dàng, chính xác và nhanh chóng.</p>
-            <p>Chúng tôi ứng dụng công nghệ <i><strong>OCR (Nhận diện ký tự quang học) kết hợp với Mô hình ngôn ngữ lớn (LLM)</strong></i> để quét, trích xuất và phân tích nội dung CV, đồng thời so sánh trực tiếp với Mô tả công việc (JD) từ nhà tuyển dụng.</p>
-            <button class="btn btn-upload-cv">Bắt đầu ngay →</button>
-        </div>
-        <img style="max-width: 50%; height: auto;" src="/static/images/illustrate-image-aboutus.png" alt="Illustration image">
-    </div> <!--Kết thúc phần giới thiệu về chúng tôi-->
-
-    <div class="our-mission-and-vision"> <!--Bắt đầu phần sứ mệnh và tầm nhìn-->
-    <div class="mission">
-        <div class="mission-image">
-            <img src="static/images/mission.png" alt="Mission Image">
-        </div>
-        <div class="mission-text">
-            <h2>Sứ mệnh</h2>
-            <p>Giúp ứng viên - đặc biệt là sinh viên - nhìn thấy điểm mạnh, điểm yếu trong CV, 
-               từ đó nâng cao khả năng tiếp cận công việc phù hợp bằng công cụ phân tích hiện đại và dễ sử dụng.</p>
-        </div>
-    </div>
-
-    <div class="vision">
-        <div class="vision-image">
-            <img src="static/images/vision.png" alt="Vision Image">
-        </div>
-        <div class="vision-text">
-            <h2>Tầm nhìn</h2>
-            <p>Trở thành một nền tảng đáng tin cậy dành cho sinh viên và người mới đi làm khi muốn chuẩn bị một CV chỉn chu, nổi bật và phù hợp với từng vị trí tuyển dụng.</p>
-        </div>
-    </div>
-</div> <!--Kết thúc phần sứ mệnh và tầm nhìn-->
-
-    <h1 style="transform: translateY(-300px);" class="features_title">Tính năng nổi bật</h1>
-    <div style="transform: translateY(-300px);" class="features_block"> <!--Bắt đầu phần tính năng nổi bật-->
-        <div class="features_list">
-            <div class="feature_item">
-                <img style="width: 100px; height: 100px;" class="feature_icon" src="static/images/features_image/OCR_image.png" alt="Feature 1">
-                <h3 class="feature_title">OCR - Quét nội dung từ CV ảnh/PDF</h3>
-            </div>
-            <div class="feature_item">
-                <img style="width: 100px; height: 100px;" class="feature_icon" src="static/images/features_image/LLM_image.png" alt="Feature 2">
-                <h3 class="feature_title">LLM - Phân tích ngữ nghĩa, ngữ cảnh</h3>
-            </div>
-            <div class="feature_item">
-                <img style="width: 100px; height: 100px;" class="feature_icon" src="static/images/features_image/cv_comparison.png" alt="Feature 3">
-                <h3 class="feature_title">So sánh CV - JD để đánh giá mức độ phù hợp</h3>
-            </div>
-            <div class="feature_item">
-                <img style="width: 100px; height: 100px;" class="feature_icon" src="static/images/features_image/advicer.png" alt="Feature 4">
-                <h3 class="feature_title">Tư vấn cải thiện - Gợi ý chỉnh CV dễ hiểu</h3>
-            </div>
-            </div> <!-- kết thúc features_list -->
-        </div> <!-- kết thúc phần tính năng nổi bật-->
-
-        <div class="info-block blue">
-            <h2>Cam kết từ CV compass</h2>
-            <br>
-            <ul>
-                <li>✔ Đảm bảo bảo mật tuyệt đối thông tin ứng viên</li>
-                <li>✔ Hỗ trợ tối ưu CV nhanh chóng và chính xác</li>
-                <li>✔ Luôn cập nhật công nghệ mới nhất để phục vụ người dùng tốt hơn</li>
+    </div> <!-- kết thúc phần introduction -->
+    <div class="container">
+        <aside class="sidebar">
+            <button class="back-btn">← Quay lại</button>
+            <h2>Cài đặt</h2>
+            <ul class="menu">
+                <li><a style="text-decoration: none;" href="/edit-profile?username={{username}}">Thông tin cá nhân</a></li>
+                <li class="active"><a style="text-decoration: none;" href="/mycv-settings?username={{username}}">CV của tôi</a></li>
+                <li>Công việc/Đã lưu</li>
+                <li>Lịch sử ứng tuyển</li>
+                <li><a style="text-decoration: none;" href="/system-settings?username={{username}}">Cài đặt hệ thống</a></li>
             </ul>
-        </div>
+        </aside>
+        <!--Main content-->
+        <main class="main">
+            <h1>Cài đặt</h1>
+            <h3>CV của tôi</h3>
 
-    <footer class="footer">
+            <div class="cv-item">
+                <img src="https://via.placeholder.com/40x40" alt="logo" class="company-logo">
+                <div class="cv-info">
+                    <h4>Công ty TNHH ABC Digital Solutions</h4>
+                    <p>💼 Digital Marketing Executive</p>
+                    <p>🔑 Thành thạo tin học, tiếng Anh sơ cấp</p>
+                    <p>💰 10-15 triệu/tháng | ⏰ T2-T6</p>
+                    <p><b>Hạn nộp:</b> 31/07/2025</p>
+                </div>
+            </div>
+
+            <div class="cv-item">
+                <img src="https://via.placeholder.com/40x40" alt="logo" class="company-logo">
+                <div class="cv-info">
+                    <h4>Công ty TNHH ABC Digital Solutions</h4>
+                    <p>💼 Digital Marketing Executive</p>
+                    <p>🔑 Thành thạo tin học, tiếng Anh sơ cấp</p>
+                    <p>💰 10-15 triệu/tháng | ⏰ T2-T6</p>
+                    <p><b>Hạn nộp:</b> 31/07/2025</p>
+                </div>
+            </div>
+        </main>
+    </div>
+            <footer class="footer">
         <div class="footer-contact">
             <div class="footer-contact-item">
                 <i class="fa fa-phone"></i>
@@ -170,7 +338,7 @@
     </div>
   </div>
   <div class="footer-logo">
-    <img src="static/images/hexacode_logo.png" alt="Hexacode Logo" class="footer-logo-img">
+    <img src="/static/images/hexacode_logo.png" alt="Hexacode Logo" class="footer-logo-img">
     <div class="footer-logo-text">HEXACODE</div>
   </div>
   <div class="footer-links">
@@ -180,9 +348,9 @@
     </div>
     <div class="footer-links-group">
       <div class="footer-links-title">Company</div>
-      <a href="/home_logged_in">Home</a>
-      <a href="/aboutus-logged-in">About us</a>
-      <a href="/pricing-user-loggedin">Pricing</a>
+      <a href="home_logged_in.html">Home</a>
+      <a href="aboutus-logged-in.html">About us</a>
+      <a href="pricing-user-loggedin.html">Pricing</a>
     </div>
     <div class="footer-links-group">
       <div class="footer-links-title">Follow us</div>
@@ -190,5 +358,6 @@
       <a href="#"><i class="fa fa-tiktok"></i> CVCompass</a>
     </div>
   </div>
-</footer> 
+</footer>
 </body>
+</html>

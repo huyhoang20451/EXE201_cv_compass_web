@@ -11,7 +11,7 @@ from fastapi.templating import Jinja2Templates
 from db import get_session
 
 templates = Jinja2Templates(directory="templates")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 # Lấy username từ token
 def decode_token(token: str):

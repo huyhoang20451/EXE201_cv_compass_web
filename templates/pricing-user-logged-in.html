@@ -17,11 +17,11 @@
         </div>
         <div class="header-menu"> <!-- Menu lựa chọn -->
             <ul>
-                <li><a href="/candidate/home-logged-in?username={{username}}">Trang chủ</a></li>
-                <li><a href="/candidate/aboutus-logged-in?username={{username}}">Về chúng tôi</a></li>
-                <li><a href="/candidate/home-logged-in?username={{username}}">Tìm việc làm</a></li>
-                <li><a href="/candidate/ocr-scan-logged-in?username={{username}}">Quét CV bằng OCR</a></li>
-                <li><a href="/candidate/pricing-user-loggedin?username={{username}}">Gói dịch vụ</a></li>
+                <li><a href="/home-logged-in?username={{username}}">Trang chủ</a></li>
+                <li><a href="/aboutus-logged-in?username={{username}}">Về chúng tôi</a></li>
+                <li><a href="/home-logged-in?username={{username}}">Tìm việc làm</a></li>
+                <li><a href="/ocr-scan-logged-in?username={{username}}">Quét CV bằng OCR</a></li>
+                <li><a href="/pricing-user-logged-in?username={{username}}">Gói dịch vụ</a></li>
             </ul>
         </div>
         <div class="header-actions">
@@ -31,7 +31,7 @@
             <script>
                 async function fetchCoin() {
                     try {
-                    const response = await fetch(`/candidate/get-coin?username={{username}}`);
+                    const response = await fetch(`/get-coin?username={{username}}`);
                     const data = await response.json();
                     if (data.success) {
                         document.querySelector('.header-actions strong').textContent = data.coin;
@@ -65,7 +65,7 @@
                     <p><a href="#" style="text-decoration:none;color:#222;">Hồ sơ của tôi</a></p>
                     <p><a href="#" style="text-decoration:none;color:#222;">CV của tôi</a></p>
                     <p><a href="#" style="text-decoration:none;color:#222;">Cài đặt tài khoản</a></p>
-                    <p><a href="home.html" style="text-decoration:none;color:#222;">Đăng xuất</a></p>
+                    <p><a href="/logout" style="text-decoration:none;color:#222;">Đăng xuất</a></p>
                 `;
                 document.body.appendChild(box);
                 document.addEventListener('click', function handleClickOutside(event) {

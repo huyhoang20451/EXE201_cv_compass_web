@@ -7,6 +7,7 @@ from db import get_session
 from Core.Auth.dependencies import templates, authorize_role
 from Core.Auth.schemas import user
 from .schemas import JD_form
+from datetime import datetime, timezone
 router = APIRouter(tags=["employer"])
 
 @router.get("/business-home", response_class=HTMLResponse)
@@ -36,9 +37,11 @@ async def submit_job(request: Request,
                      session: Session = Depends(get_session)):
     form = await request.form()
     jd_form = dict(form)
+    jd_form["business_id"] = user_info.id
+    jd_form["created_at"] = datetime.now(timezone.utc)
     jd_form = JD_form(**jd_form)
     jd = add_jd(session, jd_form)
-    return RedirectResponse(url="/business-dashboard", status_code=303)
+    return RedirectResponse(url=f"/job-storage?company={user_info.company_name}&username={user_info.username}", status_code=303)
 
 @router.get("/dang-tuyen-ngay", response_class=HTMLResponse)
 def dang_tuyen_ngay(request: Request, 

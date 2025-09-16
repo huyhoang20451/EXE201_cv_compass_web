@@ -2,9 +2,12 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime, timezone, date
+from apps.business.schemas import JD_form
+import json
 
 class User_db(SQLModel, table=True):
     __tablename__ = "user"
+
     id: int | None = Field(default=None, primary_key=True)
     username: str = Field(nullable=False, max_length=100, unique=True)
     hashed_password: str = Field(nullable=False, max_length=255)
@@ -18,14 +21,24 @@ class User_db(SQLModel, table=True):
 
 class jd_db(SQLModel, table=True):
     __tablename__ = "jd"
-    id: int | None = Field(default=None, primary_key=True)
+    
+    id: Optional[int] = Field(default=None, primary_key=True)
     title: str = Field(nullable=False, max_length=100)
-    details: str = Field(nullable=False, max_length=1000)
     location: str = Field(nullable=False, max_length=1000)
-    salary: int = Field(nullable=False)
-    business_id: int = Field(foreign_key="User.id")
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
-
+    salary: Optional[str] = Field(default=None, max_length=50)
+    industry: Optional[str] = Field(default=None, max_length=255)
+    position: Optional[str] = Field(default=None, max_length=255)
+    company: Optional[str] = Field(default=None, max_length=255)
+    workplace: Optional[str] = Field(default=None, max_length=255)
+    job_description: Optional[str] = Field(default=None)
+    requirements: Optional[str] = Field(default=None)
+    benefits: Optional[str] = Field(default=None)
+    working_time: Optional[str] = Field(default=None, max_length=255)
+    application_method: Optional[str] = Field(default=None, max_length=255)
+    deadline: Optional[str] = Field(default=None, max_length=255)
+    business_id: Optional[int] = Field(default=None, foreign_key="User.id")
+    created_at: datetime = Field(nullable=True)
+    
 class candidate_CV_db(SQLModel, table=True):
     __tablename__ = "candidate_CV"
 

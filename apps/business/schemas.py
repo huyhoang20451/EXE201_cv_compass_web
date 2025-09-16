@@ -1,23 +1,33 @@
-from datetime import date
+from datetime import date, datetime
 from pydantic import BaseModel, HttpUrl, ConfigDict
+from typing import List, Optional
 
-class jd(BaseModel):
-    id: int
-    company_logo: str
-    job_title: str
-    company_name: str
+class JD_form(BaseModel):
+    id: Optional[int] = None
+    title: str
     salary: str
     location: str
-    details: dict
+    industry: Optional[str] = None
+    position: Optional[str] = None
+    company: Optional[str] = None
+    workplace: Optional[str] = None
+    job_description: Optional[str] = None
+    requirements: Optional[str] = None
+    benefits: Optional[str] = None
+    working_time: Optional[str] = None
+    application_method: Optional[str] = None
+    deadline: Optional[str] = None
+
+    business_id: Optional[int] = None
+    created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
 
-class JD_form(BaseModel)
-    company_logo: str
-    job_title: str
-    company_name: str
-    salary: str
-    location: str
-    details: dict
-
-    model_config = ConfigDict(from_attributes=True)
+class OCR_result(BaseModel):
+    Met: List[str]
+    Not_Met: List[str]
+    Met_Count: int
+    Not_Met_Count: int
+    Total: int
+    Ratio: float
+    Ratio_Percent: float

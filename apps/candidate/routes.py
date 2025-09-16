@@ -34,26 +34,19 @@ async def about_us(request: Request,
     return templates.TemplateResponse("aboutus-logged-in.html", {"request": request, "username": user_info.username})
 
 @router.get("/pricing-user-logged-in", response_class=HTMLResponse)
-def pricing(request: Request,
-            user_info: user = Depends(authorize_role(["candidate"]))):
+async def pricing(request: Request,
+                  user_info: user = Depends(authorize_role(["candidate"]))):
     return templates.TemplateResponse("pricing-user-logged-in.html", {"request": request, "username": user_info.username})
 
 @router.get("/ocr-scan-logged-in", response_class=HTMLResponse)
-def ocr_scan(request: Request,
-             user_info: user = Depends(authorize_role(["candidate"]))):
+async def ocr_scan(request: Request,
+                   user_info: user = Depends(authorize_role(["candidate"]))):
     return templates.TemplateResponse("ocr-scan.html", {"request": request, "username": user_info.username})
 
-@router.get("/find_job")
-async def find_job():
-    return ("find_job.html")
-
-@router.get("/cv_ocr")
-async def cv_ocr():
-    return ("cv_ocr.html")
-
-@router.get("/pricing")
-async def pricing():
-    return ("pricing.html")
+@router.get("/finding-jobs", response_class=HTMLResponse)
+async def finding_jobs(request: Request,
+                       user_info: user = Depends(authorize_role(["candidate"]))):
+    return templates.TemplateResponse("finding-jobs.html", {"request": request, "username": user_info.username, "user": user_info})
 
 # Thanh tìm kiếm job
 @router.post("/jobs_search", response_model=list[JobResponse])
@@ -98,5 +91,16 @@ async def get_coin(user_info: user = Depends(authorize_role(["candidate"]))):
     return JSONResponse(content={"success": True, "coin": coin})
 
 @router.get("/create-free-cv", response_class=HTMLResponse)
-def create_free_cv(request: Request, user_info: user = Depends(authorize_role(["candidate"]))):
+def create_free_cv(request: Request, 
+                   user_info: user = Depends(authorize_role(["candidate"]))):
     return templates.TemplateResponse("create-free-cv.html", {"request": request})
+
+@router.get("/mycv-settings", response_class=HTMLResponse)
+def mycv_settings(request: Request,
+                  user_info: user = Depends(authorize_role(["candidate"]))):
+    return templates.TemplateResponse("mycv-settings.html", {"request": request, "username": user_info.username, "user": user_info})
+
+@router.get("/finding-jobs", response_class=HTMLResponse)
+def finding_jobs(request: Request,
+                 user_info: user = Depends(authorize_role(["candidate"]))):
+    return templates.TemplateResponse("finding-jobs.html", {"request": request, "username": user_info.username, "user": user_info})

@@ -321,7 +321,23 @@ def job_storage_detail(request: Request, company: str, username: str, job_id: in
     return templates.TemplateResponse("job-storage.html", {"request": request, "company": company, "username": username, "job_position": job_position, "job_descriptions": job_descriptions, "job": job})
 
 @app.post("/submit-job", response_class=HTMLResponse)
-def submit_job(request: Request, company_logo: str = Form(...), job_title: str = Form(...), company_name: str = Form(...), salary: str = Form(...), location: str = Form(...), industry: str = Form(...), position: str = Form(...), company: str = Form(...), workplace: str = Form(...), job_description: str = Form(...), requirements: str = Form(...), benefits: str = Form(...), working_time: str = Form(...), application_method: str = Form(...), deadline: str = Form(...), username: str = Form(...)):
+def submit_job(request: Request, 
+               company_logo: str = Form(...), 
+               job_title: str = Form(...), 
+               company_name: str = Form(...), 
+               salary: str = Form(...), 
+               location: str = Form(...), 
+               industry: str = Form(...), 
+               position: str = Form(...), 
+               company: str = Form(...), 
+               workplace: str = Form(...), 
+               job_description: str = Form(...), 
+               requirements: str = Form(...), 
+               benefits: str = Form(...), 
+               working_time: str = Form(...), 
+               application_method: str = Form(...), 
+               deadline: str = Form(...), 
+               username: str = Form(...)):
     job_descriptions = load_jd()
     new_id = max([job["id"] for job in job_descriptions], default=0) + 1
     # Tìm company_id cho công ty này, nếu chưa có thì gán mới

@@ -17,11 +17,11 @@
         </div>
         <div class="header-menu"> <!-- Menu lựa chọn -->
             <ul>
-                <li><a href="/business/business-dashboard?username={{username}}&role={{role}}&company={{company}}">Trang chủ</a></li>
-                <li><a href="/business/job-storage?username={{username}}&role={{role}}&company={{company}}">Quản lý JD</a></li>
-                <li><a href="/business/cv-detail-business?username={{username}}&role={{role}}&company={{company}}">Danh sách CV</a></li>
+                <li><a href="/business-dashboard?username={{username}}&role={{role}}&company={{company}}">Trang chủ</a></li>
+                <li><a href="/job-storage?username={{username}}&role={{role}}&company={{company}}">Quản lý JD</a></li>
+                <li><a href="/cv-detail-business?username={{username}}&role={{role}}&company={{company}}">Danh sách CV</a></li>
                 <li><a href="#">Quét CV tự động</a></li>
-                <li><a href="/business/pricing-business-logged-in?username={{username}}&role={{role}}&company={{company}}">Nâng cấp Premium</a></li>
+                <li><a href="/pricing-business-logged-in?username={{username}}&role={{role}}&company={{company}}">Nâng cấp Premium</a></li>
             </ul>
         </div>
         <div class="header-actions">
@@ -47,7 +47,7 @@
                     <p><a href="#" style="text-decoration:none;color:#222;">Hồ sơ của tôi</a></p>
                     <p><a href="#" style="text-decoration:none;color:#222;">Lưu trữ JD</a></p>
                     <p><a href="#" style="text-decoration:none;color:#222;">Cài đặt</a></p>
-                    <p><a href="/business/business-home" style="text-decoration:none;color:#222;">Đăng xuất</a></p>
+                    <p><a href="/logout" style="text-decoration:none;color:#222;">Đăng xuất</a></p>
                 `;
                 document.body.appendChild(box);
                 document.addEventListener('click', function handleClickOutside(event) {

@@ -20,17 +20,17 @@
                 <li><a href="/">Trang chủ</a></li>
                 <li><a href="/about-us">Về chúng tôi</a></li>
                 <li><a href="/">Tìm việc làm</a></li>
-                <li><a href="/auth/login">Quét CV bằng OCR</a></li>
-                <li><a href="/candidate/pricing">Gói dịch vụ</a></li>
+                <li><a href="/login">Quét CV bằng OCR</a></li>
+                <li><a href="/pricing">Gói dịch vụ</a></li>
             </ul>
         </div>
         <div class="header-actions">
-            <button onclick="location.href='/auth/login'" class="btn btn-login">Đăng nhập</button>
-            <button onclick="location.href='/auth/signup'" class="btn btn-register">Đăng ký</button>
+            <button onclick="location.href='/login'" class="btn btn-login">Đăng nhập</button>
+            <button onclick="location.href='/signup'" class="btn btn-register">Đăng ký</button>
         </div>
         <div class="header-nhatuyendung">
            <p class="cau_hoi">Bạn là nhà tuyển dụng?</p>
-           <p><a href="/business/business-home" target='_blank'>Đăng tin ngay</a></p>
+           <p><a href="/business-home" target='_blank'>Đăng tin ngay</a></p>
         </div>
     </div> <!-- kết thúc phần header -->
 
@@ -47,7 +47,7 @@
                 <h2>Công cụ giúp bạn hiểu rõ hơn về hồ sơ ứng tuyển của mình</h2>
             </div>
             <div class="button_content">
-                <button onclick="location.href='/auth/login'" class="btn btn-upload-cv">Tải CV ngay <span class="material-symbols-outlined">upload</span></button>
+                <button onclick="location.href='/login'" class="btn btn-upload-cv">Tải CV ngay <span class="material-symbols-outlined">upload</span></button>
             </div>
         </div>
     </div> <!-- kết thúc phần introduction -->
@@ -95,7 +95,7 @@
             <div class="header-chance-recruit"><h2>Cơ hội tuyển dụng hôm nay</h2></div>
         </div>
         
-        <section onclick="location.href='/auth/login'" class="job-listing-grid">
+        <section onclick="location.href='/login'" class="job-listing-grid">
                 {%for jd in job_descriptions%}
                     <div class="job-card">
                         <div class="job-card-logo">
@@ -170,7 +170,7 @@
     <div class="chance-concern">Có thể bạn quan tâm</div>
     </div>
     
-    <section onclick="location.href='/auth/login'" class="job-listing-grid">
+    <section onclick="location.href='/login'" class="job-listing-grid">
                 {%for jd in job_descriptions%}
                     <div class="job-card">
                         <div class="job-card-logo">

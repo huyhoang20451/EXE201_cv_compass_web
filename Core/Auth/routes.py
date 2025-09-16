@@ -36,7 +36,7 @@ async def register_page(request: Request, session: Session = Depends(get_session
     if role == "business":
         url = f"/business-dashboard"
     else:
-        url = f"/candidate/home-logged-in"
+        url = f"/home-logged-in"
     response = RedirectResponse(url=url, status_code=303)
     response.set_cookie(
         key="access_token",        # tên cookie
@@ -67,6 +67,14 @@ async def register(request: Request, session: Session = Depends(get_session)):
     if not new_user:
         raise templates.TemplateResponse("register.html", {"request": request, "error": "Tên người dùng đã tồn tại"})
     return templates.TemplateResponse("login.html", {"request": request, "success": "Đăng ký thành công"})
+
+# Đăng xuất
+@router.post("/logout", response_class=RedirectResponse)
+async def register_page(request: Request):
+    response = RedirectResponse(url="/", status_code=303)
+    response.delete_cookie(key="access_token", httponly=True)
+    return response
+
 
 
 

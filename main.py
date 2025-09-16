@@ -3,8 +3,10 @@ from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
 from apps.candidate.routes import router as candidate_router
+from apps.business.routes import router as business_router
 from Core.Auth.routes import router as auth_router
 from Core.Auth.dependencies import authorize_role, templates
+from Core.Auth.schemas import user
 from db import init_db, get_session
 from sqlmodel import Session
 
@@ -12,8 +14,10 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Đăng ký router của từng module
-app.include_router(candidate_router, prefix="/candidate")
-app.include_router(auth_router, prefix="/auth")
+app.include_router(auth_router)
+app.include_router(candidate_router)
+app.include_router(business_router)
+
 @app.on_event("startup")
 def on_startup():
     init_db()
@@ -28,5 +32,20 @@ async def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
 @app.get("/about-us")
-async def about_us():
-    return("about-us.html")
+async def about_us(request: Request):
+    return templates.TemplateResponse("about-us.html", {"request": request})
+
+@app.get("/pricing", response_class=HTMLResponse)
+def pricing(request: Request):
+    return templates.TemplateResponse("pricing.html", {"request": request})
+
+@app.get("/edit-profile", response_class=HTMLResponse)
+def edit_profile(request: Request,
+                 user_info: user = Depends(authorize_role(["candidate", "business"]))):
+
+    return templates.TemplateResponse("settings.html", {"request": request, "username": user_info.username, "user": user_info})
+
+@app.get("/system-settings", response_class=HTMLResponse)
+def system_settings(request: Request,
+                    user_info: user = Depends(authorize_role(["candidate", "business"]))):
+    return templates.TemplateResponse("system-settings.html", {"request": request, "username": user_info.username, "user": user_info})

@@ -17,11 +17,11 @@
         </div>
         <div class="header-menu"> <!-- Menu lựa chọn -->
             <ul>
-                <li><a href="/candidate/home-logged-in?username={{username}}">Trang chủ</a></li>
-                <li><a href="/candidate/aboutus-logged-in?username={{username}}">Về chúng tôi</a></li>
-                <li><a href="/candidate/finding-jobs?username={{username}}">Tìm việc làm</a></li>
-                <li><a href="/candidate/ocr-scan-logged-in?username={{username}}">Quét CV bằng OCR</a></li>
-                <li><a href="/candidate/pricing-user-loggedin?username={{username}}">Gói dịch vụ</a></li>
+                <li><a href="/home-logged-in?username={{username}}">Trang chủ</a></li>
+                <li><a href="/aboutus-logged-in?username={{username}}">Về chúng tôi</a></li>
+                <li><a href="/finding-jobs?username={{username}}">Tìm việc làm</a></li>
+                <li><a href="/ocr-scan-logged-in?username={{username}}">Quét CV bằng OCR</a></li>
+                <li><a href="/pricing-user-loggedin?username={{username}}">Gói dịch vụ</a></li>
             </ul>
         </div>
         <div class="header-actions">
@@ -65,7 +65,7 @@
                     <p><a href="/edit-profile?username={{username}}" style="text-decoration:none;color:#222;">Hồ sơ của tôi</a></p>
                     <p><a href="/mycv-settings?username={{username}}" style="text-decoration:none;color:#222;">CV của tôi</a></p>
                     <p><a href="/system-settings?username={{username}}" style="text-decoration:none;color:#222;">Cài đặt tài khoản</a></p>
-                    <p><a href="/home" style="text-decoration:none;color:#222;">Đăng xuất</a></p>
+                    <p><a href="/logout" style="text-decoration:none;color:#222;">Đăng xuất</a></p>
                 `;
                 document.body.appendChild(box);
                 document.addEventListener('click', function handleClickOutside(event) {
@@ -79,7 +79,7 @@
 
         <div class="header-nhatuyendung">
            <p class="cau_hoi">Bạn là nhà tuyển dụng?</p>
-           <p><a href="/business/business-home" target='_blank'>Đăng tin ngay</a></p>
+           <p><a href="/business-home" target='_blank'>Đăng tin ngay</a></p>
         </div>
     </div> <!-- kết thúc phần header -->
     <div class="introduction"> <!-- Bắt đầu phần tựa đề -->
@@ -94,7 +94,7 @@
         <script>
             function unlockTop5JD() {
                 // Lay tong so xu o trang top-10-best-jd-unblur
-                fetch(`/candidate/deduct-coin?username={{username}}&amount=5`)
+                fetch(`/deduct-coin?username={{username}}&amount=5`)
                   .then(res => res.json())
                   .then(data => {
                     if (data.success) {

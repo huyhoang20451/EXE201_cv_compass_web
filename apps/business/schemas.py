@@ -9,7 +9,7 @@ class JD_form(BaseModel):
     location: str
     industry: Optional[str] = None
     position: Optional[str] = None
-    company: Optional[str] = None
+    company_name: Optional[str] = None
     workplace: Optional[str] = None
     job_description: Optional[str] = None
     requirements: Optional[str] = None
@@ -31,3 +31,17 @@ class OCR_result(BaseModel):
     Total: int
     Ratio: float
     Ratio_Percent: float
+
+class candidate_CV(BaseModel):
+    id: int
+    user_id: int
+    URL: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+class jd_CV(BaseModel):
+    id: int
+    jd_id: int
+    URL: str
+
+    model_config = ConfigDict(from_attributes=True)

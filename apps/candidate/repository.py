@@ -1,7 +1,7 @@
 # Truy vấn cơ sỏ dữ liệu
 from sqlmodel import Session, select
-from models import User_db, jd_db, candidate_CV_db
-from .schemas import candidate_CV, jd
+from models import User_db, jd_db, candidate_CV_db, jd_CV_db
+from .schemas import candidate_CV, jd, jd_CV
 from sqlalchemy import or_
 from typing import List, Optional
 
@@ -62,3 +62,25 @@ def update_coin(session: Session,
     session.refresh(result)
 
     return result.coin
+
+def get_candidate_cv_by_id(session: Session, cv_id:int) -> candidate_CV:
+    cv = session.exec(select(candidate_CV_db).where(candidate_CV_db.cv_id == cv_id)).first()
+    return candidate_CV.model_validate(cv)
+
+def add_cv_into_jd(session: Session, URL: str, jd_id: int) -> jd_CV:
+    db_obj = jd_CV_db(URL=URL, jd_id=jd_id)
+
+    session.add(db_obj)
+    session.commit()
+    session.refresh(db_obj)  # để lấy id vừa tạo
+    
+    return jd_CV.model_validate(db_obj)
+
+def add_cv_into_candidate(session: Session, URL: str, user_id: int) -> candidate_CV:
+    db_obj = candidate_CV_db(URL=URL, user_id=user_id)
+
+    session.add(db_obj)
+    session.commit()
+    session.refresh(db_obj)  # để lấy id vừa tạo
+    
+    return candidate_CV.model_validate(db_obj)

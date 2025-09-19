@@ -36,19 +36,19 @@ class jd_db(SQLModel, table=True):
     working_time: Optional[str] = Field(default=None, max_length=255)
     application_method: Optional[str] = Field(default=None, max_length=255)
     deadline: Optional[str] = Field(default=None, max_length=255)
-    business_id: Optional[int] = Field(default=None, foreign_key="User.id")
+    business_id: Optional[int] = Field(default=None, foreign_key="user.id")
     created_at: datetime = Field(nullable=True)
     
 class candidate_CV_db(SQLModel, table=True):
     __tablename__ = "candidate_CV"
 
-    cv_id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: int = Field(foreign_key="candidate.id")   # liên kết với bảng users
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")   # liên kết với bảng users
     URL: str = Field(max_length=255)
 
 class jd_CV_db(SQLModel, table=True):
     __tablename__ = "jd_CV"
 
-    cv_id: Optional[int] = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     jd_id: int = Field(foreign_key="jd.id")   # liên kết với bảng job
     URL: str = Field(max_length=255)

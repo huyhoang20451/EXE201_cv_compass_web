@@ -32,7 +32,7 @@ async def register_page(request: Request, session: Session = Depends(get_session
                                    session)
     if not token:
         raise HTTPException(status_code=400, detail="Sai username hoặc password")
-    username, role = decode_token(token.access_token)
+    username, role, company_name = decode_token(token.access_token)
     if role == "business":
         url = f"/business-dashboard"
     else:
@@ -46,7 +46,6 @@ async def register_page(request: Request, session: Session = Depends(get_session
     )
     return response
 
-
 # Trang đăng ký:
 @router.get("/signup", response_class=HTMLResponse)
 async def register_page(request: Request):
@@ -58,6 +57,7 @@ async def register_page(request: Request):
 async def register(request: Request, session: Session = Depends(get_session)):
     form = await request.form()
     form_data = dict(form)
+    print(form_data)
     user_in = UserCreate(**form_data)  # parse sang Pydantic model
     new_user = create_user(session, 
                            user_in.username, 
@@ -69,13 +69,8 @@ async def register(request: Request, session: Session = Depends(get_session)):
     return templates.TemplateResponse("login.html", {"request": request, "success": "Đăng ký thành công"})
 
 # Đăng xuất
-@router.post("/logout", response_class=RedirectResponse)
+@router.get("/logout", response_class=RedirectResponse)
 async def register_page(request: Request):
     response = RedirectResponse(url="/", status_code=303)
     response.delete_cookie(key="access_token", httponly=True)
     return response
-
-
-
-
-

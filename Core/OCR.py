@@ -12,6 +12,9 @@ from PIL import Image
 from torchvision.transforms.functional import InterpolationMode
 from transformers import AutoModel, AutoTokenizer, AutoModelForCausalLM
 import json
+from PyPDF2 import PdfReader
+from io import BytesIO
+from fastapi import UploadFile
 
 # ===============================
 # IMAGE PREPROCESSING
@@ -181,7 +184,7 @@ def clean_and_parse(result_json: str):
 
     return parse_evaluation(data)
 
-def OCR(image, JD):
+def compare_OCR(image, JD):
     CR = run_vintern(image)
     qwen_output = run_qwen(JD, CR)
     result = clean_and_parse(qwen_output)
@@ -189,4 +192,21 @@ def OCR(image, JD):
         print(f"- {r}")
     for r in result["Not_Met"]:
         print(f"- {r}")
+    return result
+
+def scan_pdf(file: UploadFile):
+    file_bytes = BytesIO(file.file.read())
+    reader = PdfReader(file_bytes)
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text() or ""
+    return text
+
+def compare(url, JD, file_type):
+    if file_type == "pdf":
+        CR = scan_pdf(url)
+    elif file_type == "image":
+        CR = run_vintern(url)
+    qwen_output = run_qwen(JD, CR)
+    result = clean_and_parse(qwen_output)
     return result

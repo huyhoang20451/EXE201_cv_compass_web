@@ -1,24 +1,24 @@
 # Chứa API
-from typing import Annotated, List
-from fastapi import APIRouter, Depends, HTTPException, Request, Cookie
+from typing import Annotated, List, Optional
+from fastapi import APIRouter, Depends, HTTPException, Request, Cookie, File, UploadFile, Form
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlmodel import Session
 from .services import (search_jobs, 
                        get_cvs, 
                        get_jds, 
                        update_coin,
-                       get_jd_by_id)
+                       get_jd_by_id,
+                       upload_cv,
+                       get_candidate_cv_by_id,
+                       add_cv_into_jd,
+                       add_cv_into_candidate)
 from db import get_session
 from Core.Auth.schemas import user
 from .schemas import JobResponse, JobSearchRequest, candidate_CV
 from Core.Auth.dependencies import templates, get_current_user, decode_token, authorize_role
-
+from Core.OCR import run_vintern
 router = APIRouter(tags=["candidate"])
 
-# Home
-@router.get("/")
-async def home():
-    return ("candidate_home.html")
 
 # Home sau khi log in
 @router.get("/home-logged-in", response_class=HTMLResponse)
@@ -91,16 +91,62 @@ async def get_coin(user_info: user = Depends(authorize_role(["candidate"]))):
     return JSONResponse(content={"success": True, "coin": coin})
 
 @router.get("/create-free-cv", response_class=HTMLResponse)
-def create_free_cv(request: Request, 
+async def create_free_cv(request: Request, 
                    user_info: user = Depends(authorize_role(["candidate"]))):
     return templates.TemplateResponse("create-free-cv.html", {"request": request})
 
 @router.get("/mycv-settings", response_class=HTMLResponse)
-def mycv_settings(request: Request,
+async def mycv_settings(request: Request,
                   user_info: user = Depends(authorize_role(["candidate"]))):
     return templates.TemplateResponse("mycv-settings.html", {"request": request, "username": user_info.username, "user": user_info})
 
 @router.get("/finding-jobs", response_class=HTMLResponse)
-def finding_jobs(request: Request,
-                 user_info: user = Depends(authorize_role(["candidate"]))):
+async def finding_jobs(request: Request,
+                       user_info: user = Depends(authorize_role(["candidate"]))):
     return templates.TemplateResponse("finding-jobs.html", {"request": request, "username": user_info.username, "user": user_info})
+
+@router.post("/upload", response_class=HTMLResponse)
+async def upload(request: Request,
+                 file: UploadFile = File(...),
+                 user_info: user = Depends(authorize_role(["candidate"])),
+                 session: Session = Depends(get_session)):
+    file_path = await upload_cv(file, user_info.id, session)
+    if file.content_type == "application/pdf" or file.filename.lower().endswith(".pdf"):
+        from Core.OCR import scan_pdf  # hàm đọc PDF
+        result = scan_pdf(file_path)
+    elif file.content_type.startswith("image/") or file.filename.lower().endswith((".jpg", ".jpeg", ".png")):
+        from Core.OCR import run_vintern  # hàm OCR
+        result = run_vintern(file_path)
+    else:
+        result = "File không hỗ trợ"
+
+    return templates.TemplateResponse("ocr-scan.html", {"request": request, "result": result})
+
+# Nộp cv cho jd bằng cv có sẵn trong database
+@router.post("/submit-existing-cv", response_class=HTMLResponse)
+async def submit_cv(request: Request,
+                    jd_id: int,
+                    existing_cv_id: Optional[int] = Form(None),
+                    user_info: user = Depends(authorize_role(["candidate"])),
+                    session: Session = Depends(get_session)):
+    cv = get_candidate_cv_by_id(session, existing_cv_id) # Lấy cv trong bảng candidate_cv
+    URL = cv.URL
+    cv = add_cv_into_jd(session, URL, jd_id) # Add cv vào bảng jd_CV
+
+    return templates.TemplateResponse("finding-jobs.html",{"request": request, 
+                                                           "username": user_info.username})
+
+# Nộp cv cho jd bằng cv upload từ máy
+@router.post("/submit-upload-cv", response_class=HTMLResponse)
+async def submit_cv(request: Request,
+                    jd_id: int,
+                    new_cv: Optional[UploadFile] = File(None),   # nếu upload CV mới
+                    user_info: user = Depends(authorize_role(["candidate"])),
+                    session: Session = Depends(get_session)):
+    if not new_cv:
+        raise HTTPException(status_code=400, detail="Chưa upload file")
+    file_path = await upload_cv(new_cv, user_info.id, session) # Lưu cv về server và database bảng candidate_cv
+    cv = add_cv_into_jd(session, file_path, jd_id) # Add cv vào bảng jd_CV
+
+    return templates.TemplateResponse("finding-jobs.html",{"request": request, 
+                                                           "username": user_info.username})

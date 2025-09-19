@@ -1,7 +1,7 @@
 # Chứa các models của dữ liệu giữa các API
-from datetime import date
+from datetime import date, datetime
 from pydantic import BaseModel, HttpUrl, ConfigDict
-
+from typing import Optional
 class JobSearchRequest(BaseModel):
     keyword: str | None = None
     location: str | None = None
@@ -16,19 +16,36 @@ class JobResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class candidate_CV(BaseModel):
-    cv_id: int
+    id: int
     user_id: int
     URL: str
 
     model_config = ConfigDict(from_attributes=True)
 
-class jd(BaseModel):
+class jd_CV(BaseModel):
     id: int
-    company_logo: str
-    job_title: str
-    company_name: str
+    jd_id: int
+    URL: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+class jd(BaseModel):
+    id: Optional[int] = None
+    title: str
     salary: str
     location: str
-    details: dict
+    industry: Optional[str] = None
+    position: Optional[str] = None
+    company_name: Optional[str] = None
+    workplace: Optional[str] = None
+    job_description: Optional[str] = None
+    requirements: Optional[str] = None
+    benefits: Optional[str] = None
+    working_time: Optional[str] = None
+    application_method: Optional[str] = None
+    deadline: Optional[str] = None
+
+    business_id: Optional[int] = None
+    created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
